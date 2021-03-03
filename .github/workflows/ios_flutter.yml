@@ -1,0 +1,20 @@
+name: iOS Flutter
+
+on: [push, pull_request]
+
+jobs: 
+  build-and-test: 
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v1 
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '12.x'
+    - uses: subosito/flutter-action@v1
+      with:
+        channel: 'stable'  
+    # Get flutter packages
+    - run: flutter pub get
+    # Build for iOS
+    # Only supported on macOS
+    - run: flutter build ios --no-codesign
