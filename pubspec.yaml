@@ -32,6 +32,14 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  pedantic: ^1.9.0
+  build_runner: ^1.10.0
+  convex_bottom_bar: ^2.7.1
+  device_info: ^1.0.0
+  camera: ^0.7.0+2
+  path_provider: ^1.6.27
+  path: ^1.7.0
+  settings_ui: ^0.6.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
