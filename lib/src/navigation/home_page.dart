@@ -1,5 +1,6 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:dawn_client/src/navigation/place_holder.dart';
+import 'package:dawn_client/src/navigation/settings_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,7 @@ class _HomePageState extends State<HomePage> {
     TabItem(icon: Icons.settings, title: 'Settings'),
   ];
 
-  final List<Widget> _children = [PlaceHolder(), PlaceHolder(), PlaceHolder()];
+  final List<Widget> _children = [PlaceHolder(), PlaceHolder(), SettingsPage()];
 
   @override
   Widget build(BuildContext context) {
