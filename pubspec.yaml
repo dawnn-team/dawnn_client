@@ -32,6 +32,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  global_configuration: ^1.6.0
   pedantic: ^1.9.0
   build_runner: ^1.10.0
   convex_bottom_bar: ^2.7.1
@@ -52,6 +53,8 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/cfg/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

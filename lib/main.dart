@@ -1,8 +1,10 @@
 import 'package:dawn_client/src/navigation/home_page.dart';
+import 'package:global_configuration/global_configuration.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await GlobalConfiguration().loadFromAsset("settings");
   runApp(DawnClient());
 }
 
