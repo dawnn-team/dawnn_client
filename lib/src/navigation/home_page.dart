@@ -1,5 +1,5 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-import 'package:dawn_client/navigation/place_holder.dart';
+import 'package:dawn_client/src/navigation/place_holder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

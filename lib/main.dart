@@ -1,4 +1,4 @@
-import 'package:dawn_client/navigation/home_page.dart';
+import 'package:dawn_client/src/navigation/home_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
