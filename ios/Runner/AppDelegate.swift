@@ -8,6 +8,12 @@ import Flutter
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
+
+    // iOS Maps API Key
+    // TODO Load this from dawn_server
+    GMSServices.provideAPIKey("""
+    """)
+
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }

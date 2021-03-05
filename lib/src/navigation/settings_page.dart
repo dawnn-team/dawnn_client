@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:settings_ui/settings_ui.dart';
 import 'package:global_configuration/global_configuration.dart';
+import 'package:settings_ui/settings_ui.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -9,7 +9,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-
 
   @override
   Widget build(BuildContext context) {
@@ -36,5 +35,6 @@ class _SettingsPageState extends State<SettingsPage> {
     // Call up a menu to chose language
     // Probably a late game feature
     print('chose language');
+    // GlobalConfiguration().updateValue(key, value)
   }
 }
