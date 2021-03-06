@@ -18,6 +18,7 @@ class _MapPageState extends State<MapPage> {
         centerTitle: true,
       ),
       body: GoogleMap(
+        mapType: MapType.satellite,
         onMapCreated: onMapCreated,
         initialCameraPosition: CameraPosition(
           target: _center,

@@ -36,13 +36,14 @@ dev_dependencies:
   pedantic: ^1.9.0
   build_runner: ^1.10.0
   convex_bottom_bar: ^2.7.1
-  device_info: ^1.0.0
-  camera: ^0.7.0+2
-  path_provider: ^1.6.27
+  device_info: ^2.0.0
+  camera: ^0.8.0
+  path_provider: ^2.0.1
   path: ^1.7.0
   settings_ui: ^0.6.0
-  google_maps_flutter: ^1.0.3
+  google_maps_flutter: ^2.0.1
   json_serializable: ^4.0.2
+  firebase_messaging: ^9.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
