@@ -1,4 +1,5 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:dawn_client/src/navigation/camera_page.dart';
 import 'package:dawn_client/src/navigation/maps_page.dart';
 import 'package:dawn_client/src/navigation/place_holder.dart';
 import 'package:dawn_client/src/navigation/settings_page.dart';
@@ -21,7 +22,7 @@ class _HomePageState extends State<HomePage> {
     TabItem(icon: Icons.settings, title: 'Settings'),
   ];
 
-  final List<Widget> _children = [PlaceHolder(), MapPage(), SettingsPage()];
+  final List<Widget> _children = [CameraPage(), MapPage(), SettingsPage()];
 
   @override
   Widget build(BuildContext context) {
