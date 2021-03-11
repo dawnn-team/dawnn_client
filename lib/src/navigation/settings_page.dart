@@ -23,6 +23,11 @@ class _SettingsPageState extends State<SettingsPage> {
               subtitle: GlobalConfiguration().getValue("language"),
               leading: Icon(Icons.language),
               onPressed: languageTapped,
+            ),
+            SettingsTile(
+              title: 'Color Scheme',
+              subtitle: GlobalConfiguration().getValue("colorScheme") ,
+              leading: Icon(Icons.color_lens_outlined),
             )
           ],
         )

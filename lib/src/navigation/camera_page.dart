@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,10 +25,7 @@ class _CameraPageState extends State<CameraPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(child: Container()),
-          ElevatedButton(
-            onPressed: sendHTTPRequest,
-            child: Text('sendData'),
-          ),
+          ElevatedButton(onPressed: sendHTTPRequest, child: Text('sendData')),
           Expanded(child: Container()),
           ElevatedButton(onPressed: getHTTPRequest, child: Text('getData')),
           Expanded(child: Container())
@@ -36,6 +35,9 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   void sendHTTPRequest() async {
+    var hwid = await _getId();
+    var body = jsonEncode({'image' : {'image': 'image-value', 'HWID': hwid}});
+    print(body);
     _client.post(
         Uri(
             scheme: 'http',
@@ -43,7 +45,7 @@ class _CameraPageState extends State<CameraPage> {
             host: '10.0.2.2',
             port: 2334,
             path: '/api/v1/image/'),
-        body: {'image': 'image-value', 'HWID': _getId().toString()});
+        body: body);
   }
 
   void getHTTPRequest() async {}
