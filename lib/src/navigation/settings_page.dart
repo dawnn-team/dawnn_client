@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:global_configuration/global_configuration.dart';
-import 'package:settings_ui/settings_ui.dart';
+import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -12,26 +11,20 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SettingsList(
-      sections: [
-        SettingsSection(
-          titlePadding: EdgeInsets.symmetric(vertical: 20, horizontal: 20), // Do I need this?
-          title: 'General',
-          tiles: [
-            SettingsTile(
-              title: 'Language',
-              subtitle: GlobalConfiguration().getValue("language"),
-              leading: Icon(Icons.language),
-              onPressed: languageTapped,
+    return Container(
+      child: SettingsScreen(
+          children: [
+            ColorPickerSettingsTile(
+              settingKey: 'key-color-picker',
+              title: 'Color scheme',
+              defaultValue: Colors.yellow,
+              onChange: (value) {
+                // TODO Change theme.
+              },
             ),
-            SettingsTile(
-              title: 'Color Scheme',
-              subtitle: GlobalConfiguration().getValue("colorScheme") ,
-              leading: Icon(Icons.color_lens_outlined),
-            )
+            // This really shouldn't be worked on until the base features are finished.
           ],
-        )
-      ],
+      ),
     );
   }
 
