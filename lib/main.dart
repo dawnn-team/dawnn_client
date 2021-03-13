@@ -14,7 +14,6 @@ class DawnClient extends StatefulWidget {
 }
 
 class _DawnClientState extends State<DawnClient> {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

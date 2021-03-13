@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 
 class MapPage extends StatefulWidget {
   @override
@@ -9,6 +10,7 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   final LatLng _center = const LatLng(45.521563, -122.677433);
+  Location _location = Location();
 
   @override
   Widget build(BuildContext context) {
@@ -19,14 +21,28 @@ class _MapPageState extends State<MapPage> {
       ),
       body: GoogleMap(
         mapType: MapType.hybrid,
-        onMapCreated: onMapCreated,
-        initialCameraPosition: CameraPosition(
-          target: _center,
-          zoom: 2,
-        ),
+        onMapCreated: _onMapCreated,
+        initialCameraPosition: CameraPosition(target: _center, zoom: 15),
       ),
     );
   }
 
-  void onMapCreated(GoogleMapController context) {}
+  Future<Map<double, double>> _getCurrentLocation() async {
+    LocationData location = await _location.getLocation();
+    return {location.longitude: location.latitude};
+  }
+
+  // This is a lazy way to set pos.
+  bool _once = true;
+  void _onMapCreated(GoogleMapController context) {
+    print('map created');
+    // TODO Request alert data from dawn server.
+    _location.onLocationChanged.listen((loc) {
+      if (_once) {
+        context.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+            target: LatLng(loc.latitude, loc.longitude), zoom: 15)));
+        _once = false;
+      }
+    });
+  }
 }
