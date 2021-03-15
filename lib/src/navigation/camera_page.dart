@@ -4,6 +4,7 @@ import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:location/location.dart';
 
 class CameraPage extends StatefulWidget {
   @override
@@ -12,6 +13,9 @@ class CameraPage extends StatefulWidget {
 
 class _CameraPageState extends State<CameraPage> {
   var _client = http.Client();
+
+  // Initializing this in camera page and in maps page - inefficient.
+  var _location = Location();
 
   @override
   Widget build(BuildContext context) {
@@ -25,18 +29,26 @@ class _CameraPageState extends State<CameraPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(child: Container()),
-          ElevatedButton(onPressed: sendHTTPRequest, child: Text('sendData')),
+          ElevatedButton(onPressed: _sendHTTPRequest, child: Text('sendData')),
           Expanded(child: Container()),
-          ElevatedButton(onPressed: getHTTPRequest, child: Text('getData')),
+          ElevatedButton(onPressed: _getHTTPRequest, child: Text('getData')),
           Expanded(child: Container())
         ],
       ),
     );
   }
 
-  void sendHTTPRequest() async {
+  void _sendHTTPRequest() async {
     var hwid = await _getId();
-    var body = jsonEncode({'image' : {'image': 'image-value', 'HWID': hwid}});
+    var location = await _getLocation();
+    var body = jsonEncode({
+      'image': {
+        'image': 'image-value',
+        'HWID': hwid,
+        // 'location' : location
+      }
+    });
+
     print(body);
     _client.post(
         Uri(
@@ -48,7 +60,18 @@ class _CameraPageState extends State<CameraPage> {
         body: body);
   }
 
-  void getHTTPRequest() async {}
+  /// Get the latitude and longitude as a json string, in that specific order.
+  Future<String> _getLocation() async {
+    LocationData locationData = await _location.getLocation();
+    var gonk = jsonEncode({
+      'latitude': locationData.latitude,
+      'longitude': locationData.longitude
+    });
+
+    return gonk;
+  }
+
+  void _getHTTPRequest() async {}
 
   Future<String> _getId() async {
     var deviceInfo = DeviceInfoPlugin();
