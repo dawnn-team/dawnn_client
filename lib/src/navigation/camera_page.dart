@@ -22,7 +22,7 @@ class _CameraPageState extends State<CameraPage> {
   void initState() {
     super.initState();
 
-    _controller = CameraController(widget.camera, ResolutionPreset.medium);
+    _controller = CameraController(widget.camera, ResolutionPreset.max);
 
     _initializeControllerFuture = _controller.initialize();
   }
@@ -38,7 +38,9 @@ class _CameraPageState extends State<CameraPage> {
           future: _initializeControllerFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return CameraPreview(_controller);
+              return AspectRatio(
+                  aspectRatio: 1.322 / _controller.value.aspectRatio, // debugged value
+                  child: CameraPreview(_controller));
             } else {
               return Center(child: CircularProgressIndicator());
             }
@@ -53,15 +55,10 @@ class _CameraPageState extends State<CameraPage> {
               final image = await _controller.takePicture();
 
               Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ImageScreen(
-                    // Pass the automatically generated path to
-                    // the DisplayPictureScreen widget.
-                    imagePath: image?.path,
-                  ),
-                ),
-              );
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          ImageScreen(imagePath: image?.path, controller: _controller,)));
             } catch (exception) {
               print(exception);
             }

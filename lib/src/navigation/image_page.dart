@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:device_info/device_info.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -9,20 +9,22 @@ import 'package:location/location.dart';
 
 class ImageScreen extends StatelessWidget {
   final String imagePath;
-
+  final CameraController controller;
   var _client = http.Client();
 
   // Initializing this in camera page and in maps page - inefficient.
   var _location = Location();
 
-  ImageScreen({Key key, this.imagePath}) : super(key: key);
+  ImageScreen({Key key, this.imagePath, this.controller}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Image')),
-      body: Image.file(File(imagePath)),
-    );
+        appBar: AppBar(title: Text('Image')),
+        body: AspectRatio(
+          aspectRatio: 1.21 / controller.value.aspectRatio,
+          child: Image.file(File(imagePath)),
+        ));
 
     /*
       Column(
