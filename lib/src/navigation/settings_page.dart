@@ -8,22 +8,21 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-
   @override
   Widget build(BuildContext context) {
     return Container(
       child: SettingsScreen(
-          children: [
-            ColorPickerSettingsTile(
-              settingKey: 'key-color-picker',
-              title: 'Color scheme',
-              defaultValue: Colors.yellow,
-              onChange: (value) {
-                // TODO Change theme.
-              },
-            ),
-            // This really shouldn't be worked on until the base features are finished.
-          ],
+        children: [
+          ColorPickerSettingsTile(
+            settingKey: 'key-color-picker',
+            title: 'Color scheme',
+            defaultValue: Colors.yellow,
+            onChange: (value) {
+              // TODO Change theme.
+            },
+          ),
+          // This really shouldn't be worked on until the base features are finished.
+        ],
       ),
     );
   }
