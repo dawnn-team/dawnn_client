@@ -32,8 +32,9 @@ class _MapPageState extends State<MapPage> {
     return {location.longitude: location.latitude};
   }
 
-  // This is a lazy way to set pos.
+  // This is a lazy way to set the position once.
   bool _once = true;
+
   void _onMapCreated(GoogleMapController context) {
     print('map created');
     // TODO Request alert data from dawn server.

@@ -1,63 +1,71 @@
-import 'dart:convert';
-
-import 'package:device_info/device_info.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+
+import 'image_page.dart';
 
 class CameraPage extends StatefulWidget {
+  final CameraDescription camera;
+
+  CameraPage(this.camera);
+
   @override
   State<StatefulWidget> createState() => _CameraPageState();
 }
 
 class _CameraPageState extends State<CameraPage> {
-  var _client = http.Client();
+  // Camera stuff
+  CameraController _controller;
+  Future<void> _initializeControllerFuture;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = CameraController(widget.camera, ResolutionPreset.medium);
+
+    _initializeControllerFuture = _controller.initialize();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Camera Page'),
-        centerTitle: true,
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(child: Container()),
-          ElevatedButton(onPressed: sendHTTPRequest, child: Text('sendData')),
-          Expanded(child: Container()),
-          ElevatedButton(onPressed: getHTTPRequest, child: Text('getData')),
-          Expanded(child: Container())
-        ],
-      ),
-    );
-  }
+        appBar: AppBar(
+          title: Text('Camera Page'),
+          centerTitle: true,
+        ),
+        body: FutureBuilder<void>(
+          future: _initializeControllerFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return CameraPreview(_controller);
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          },
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.camera_alt),
+          onPressed: () async {
+            try {
+              await _initializeControllerFuture;
 
-  void sendHTTPRequest() async {
-    var hwid = await _getId();
-    var body = jsonEncode({'image' : {'image': 'image-value', 'HWID': hwid}});
-    print(body);
-    _client.post(
-        Uri(
-            scheme: 'http',
-            userInfo: '',
-            host: '10.0.2.2',
-            port: 2334,
-            path: '/api/v1/image/'),
-        body: body);
-  }
+              final image = await _controller.takePicture();
 
-  void getHTTPRequest() async {}
-
-  Future<String> _getId() async {
-    var deviceInfo = DeviceInfoPlugin();
-    if (Theme.of(context).platform == TargetPlatform.iOS) {
-      var iosDeviceInfo = await deviceInfo.iosInfo;
-      return iosDeviceInfo.identifierForVendor;
-    } else {
-      var androidDeviceInfo = await deviceInfo.androidInfo;
-      return androidDeviceInfo.androidId;
-    }
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ImageScreen(
+                    // Pass the automatically generated path to
+                    // the DisplayPictureScreen widget.
+                    imagePath: image?.path,
+                  ),
+                ),
+              );
+            } catch (exception) {
+              print(exception);
+            }
+          },
+        ));
   }
 }

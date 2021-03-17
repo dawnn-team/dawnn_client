@@ -1,20 +1,26 @@
+import 'package:camera/camera.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:dawn_client/src/navigation/camera_page.dart';
 import 'package:dawn_client/src/navigation/maps_page.dart';
-import 'package:dawn_client/src/navigation/place_holder.dart';
 import 'package:dawn_client/src/navigation/settings_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
+  final camera;
+
+  HomePage(this.camera);
+
   @override
-  State<StatefulWidget> createState() {
-    return _HomePageState();
-  }
+  State<StatefulWidget> createState() => _HomePageState(camera);
 }
 
 class _HomePageState extends State<HomePage> {
-  int _currentIndex = 1; // Set to 1 straight away to load 'home' page.
+  _HomePageState(_camera)
+      : _children = [CameraPage(_camera), MapPage(), SettingsPage()];
+
+  // Set to 1 straight away to load 'home' page.
+  int _currentIndex = 1;
 
   final _barItems = [
     TabItem(icon: Icons.camera_alt, title: 'Photos'),
@@ -22,7 +28,7 @@ class _HomePageState extends State<HomePage> {
     TabItem(icon: Icons.settings, title: 'Settings'),
   ];
 
-  final List<Widget> _children = [CameraPage(), MapPage(), SettingsPage()];
+  final List<Widget> _children;
 
   @override
   Widget build(BuildContext context) {
