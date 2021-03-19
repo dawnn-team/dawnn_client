@@ -27,6 +27,7 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
+  // not used
   Future<Map<double, double>> _getCurrentLocation() async {
     LocationData location = await _location.getLocation();
     return {location.longitude: location.latitude};
@@ -35,6 +36,7 @@ class _MapPageState extends State<MapPage> {
   // This is a lazy way to set the position once.
   bool _once = true;
 
+  /// Called when the map is created.
   void _onMapCreated(GoogleMapController context) {
     print('map created');
     // TODO Request alert data from dawn server.

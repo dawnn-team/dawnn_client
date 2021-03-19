@@ -40,6 +40,8 @@ class ImageScreen extends StatelessWidget {
       ),*/
   }
 
+  /// Test method to send http request to localhost,
+  /// to the port of Dawn server. Used for testing
   void _sendHTTPRequest() async {
     var hwid = await _getId();
     var location = await _getLocation();
@@ -61,6 +63,8 @@ class ImageScreen extends StatelessWidget {
   void _getHTTPRequest() async {}
 
   // TODO: Fix this
+  /// Get the HWID of this device. Used as a parameter
+  /// for the json http post request.
   Future<String> _getId() async {
     // var deviceInfo = DeviceInfoPlugin();
     // if (Theme.of(context).platform == TargetPlatform.iOS) {
