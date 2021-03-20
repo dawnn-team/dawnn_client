@@ -4,7 +4,7 @@
 
 ![android build](https://github.com/dawnn-team/dawn_client/actions/workflows/android_flutter.yml/badge.svg) ![ios build](https://github.com/dawnn-team/dawn_client/actions/workflows/ios_flutter.yml/badge.svg)
 # About 
- The idea behind this app is simple - utilizing the app, one is able to take and upload a picture of a potential danger and app users nearby will recieve an alert. Alerted users will be to see the potential danger plotted on a map and have the ability to interact with it. 
+ The idea behind this app is simple - to provide a tool that can help users avoid potential dangers. A user can take a picture of a potential threat, add a caption, upload it, and other Dawn users nearby will recieve an alert. In turn, these users can view the danger plotted on a map, view the image and see more information about it. This feature set is to be expanded.
  
 # Background 
  This project is inspired by the events in Belarus following the August 2020 election. It strives to support the democratic resistance movement by providing an easy-to-use application that can help peaceful protesters stay aware of potential threats.
