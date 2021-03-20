@@ -21,23 +21,13 @@ class ImageScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text('Image')),
-        body: AspectRatio(
-          aspectRatio: 1.21 / controller.value.aspectRatio,
-          child: Image.file(File(imagePath)),
-        ));
-
-    /*
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(child: Container()),
-          ElevatedButton(onPressed: _sendHTTPRequest, child: Text('sendData')),
-          Expanded(child: Container()),
-          ElevatedButton(onPressed: _getHTTPRequest, child: Text('getData')),
-          Expanded(child: Container())
-        ],
-      ),*/
+        body: ListView(children: [
+          AspectRatio(
+            aspectRatio: 1.21 / controller.value.aspectRatio,
+            child: Image.file(File(imagePath)),
+          ),
+          ElevatedButton(onPressed: _sendHTTPRequest, child: Text('Post')),
+        ]));
   }
 
   /// Test method to send http request to localhost,
@@ -46,21 +36,26 @@ class ImageScreen extends StatelessWidget {
     var hwid = await _getId();
     var location = await _getLocation();
     var body = jsonEncode({
-      'image': {'image': 'image-value', 'HWID': hwid, 'location': location}
+      'image': {
+        'image': 'image-value',
+        'HWID': hwid,
+        'location': location.toString()
+      }
     });
 
-    print(body);
-    _client.post(
+    var response = await _client.post(
         Uri(
-            scheme: 'http',
-            userInfo: '',
-            host: '10.0.2.2',
-            port: 2334,
-            path: '/api/v1/image/'),
-        body: body);
-  }
+          scheme: 'http',
+          userInfo: '',
+          host: '10.0.2.2',
+          port: 2334,
+          path: '/api/v1/image/',
+        ),
+        body: body,
+        headers: {'Content-type': 'application/json'});
 
-  void _getHTTPRequest() async {}
+    print(json.decode(response.body));
+  }
 
   // TODO: Fix this
   /// Get the HWID of this device. Used as a parameter
@@ -74,12 +69,13 @@ class ImageScreen extends StatelessWidget {
     //   var androidDeviceInfo = await deviceInfo.androidInfo;
     //   return androidDeviceInfo.androidId;
     // }
-    return null;
+    return 'null';
   }
 
   /// Get the latitude and longitude as a json string, in that exact order.
   Future<String> _getLocation() async {
     LocationData locationData = await _location.getLocation();
+    // TODO Fix
     var locationJson = jsonEncode({
       'latitude': locationData.latitude,
       'longitude': locationData.longitude
