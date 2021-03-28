@@ -58,7 +58,7 @@ class _CameraPageState extends State<CameraPage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          ImageScreen(imagePath: image?.path, controller: _controller,)));
+                          ImageScreen(image.path, _controller,)));
             } catch (exception) {
               print(exception);
             }

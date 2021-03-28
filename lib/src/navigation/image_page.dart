@@ -6,8 +6,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
-class ImageScreen extends StatelessWidget {
+class ImageScreen extends StatefulWidget {
+  final imagePath;
+  final controller;
+
+  ImageScreen(this.imagePath, this.controller);
+
+  @override
+  State<StatefulWidget> createState() =>
+      _ImageScreenState(imagePath, controller);
+}
+
+class _ImageScreenState extends State<ImageScreen> {
   final String imagePath;
   final CameraController controller;
   var _client = http.Client();
@@ -15,7 +28,7 @@ class ImageScreen extends StatelessWidget {
   // Initializing this in camera page and in maps page - inefficient.
   var _location = Location();
 
-  ImageScreen({Key key, this.imagePath, this.controller}) : super(key: key);
+  _ImageScreenState(this.imagePath, this.controller);
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +39,15 @@ class ImageScreen extends StatelessWidget {
             aspectRatio: 1.21 / controller.value.aspectRatio,
             child: Image.file(File(imagePath)),
           ),
-          ElevatedButton(onPressed: _sendHTTPRequest, child: Text('Post')),
+          ElevatedButton(
+              onPressed: () => {_sendHTTPRequest(context)},
+              child: Text('Post')),
         ]));
   }
 
   /// Test method to send http request to localhost,
-  /// to the port of Dawn server. Used for testing
-  void _sendHTTPRequest() async {
+  /// to the port of Dawn server. Used for testing.
+  void _sendHTTPRequest(BuildContext context) async {
     var hwid = await _getId();
     var location = await _getLocation();
     var body = jsonEncode({
@@ -54,7 +69,26 @@ class ImageScreen extends StatelessWidget {
         body: body,
         headers: {'Content-type': 'application/json'});
 
-    print(json.decode(response.body));
+    String message;
+    Color color;
+    switch (response.statusCode) {
+      case 400:
+        message = 'Error code 400, internal fail. Please report this error.';
+        color = Colors.red;
+        break;
+      case 200:
+        message = 'Success! Image has been posted.';
+        color = Colors.green;
+        break;
+      default:
+        message = 'Unexpected response code: ' + response.statusCode.toString();
+        color = Colors.blueAccent;
+    }
+
+    showTopSnackBar(
+        context,
+        CustomSnackBar.info(
+            message: message, backgroundColor: color));
   }
 
   // TODO: Fix this
