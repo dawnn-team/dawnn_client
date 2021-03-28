@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -51,7 +52,7 @@ class _ImageScreenState extends State<ImageScreen> {
   /// to the port of Dawn server. Used for testing.
   void _sendHTTPRequest(BuildContext context) async {
     // This is kind of a long method...
-    var hwid = await _getId();
+    var hwid = await _getId(context);
     var location = await _getLocation();
     var image64 = await _compressToBase64(File(imagePath));
 
@@ -116,19 +117,17 @@ class _ImageScreenState extends State<ImageScreen> {
     return base64Encode(bytes);
   }
 
-  // TODO: Fix this
   /// Get the HWID of this device. Used as a parameter
   /// for the json http post request.
-  Future<String> _getId() async {
-    // var deviceInfo = DeviceInfoPlugin();
-    // if (Theme.of(context).platform == TargetPlatform.iOS) {
-    //   var iosDeviceInfo = await deviceInfo.iosInfo;
-    //   return iosDeviceInfo.identifierForVendor;
-    // } else {
-    //   var androidDeviceInfo = await deviceInfo.androidInfo;
-    //   return androidDeviceInfo.androidId;
-    // }
-    return 'null';
+  Future<String> _getId(BuildContext context) async {
+    var deviceInfo = DeviceInfoPlugin();
+    if (Theme.of(context).platform == TargetPlatform.iOS) {
+      var iosDeviceInfo = await deviceInfo.iosInfo;
+      return iosDeviceInfo.identifierForVendor;
+    } else {
+      var androidDeviceInfo = await deviceInfo.androidInfo;
+      return androidDeviceInfo.androidId;
+    }
   }
 
   /// Get the latitude and longitude as a json string, in that exact order.
