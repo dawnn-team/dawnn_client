@@ -50,6 +50,7 @@ class _ImageScreenState extends State<ImageScreen> {
   void _sendHTTPRequest(BuildContext context) async {
     var hwid = await _getId();
     var location = await _getLocation();
+    // TODO Compress image.
     var body = jsonEncode({
       'image': {
         'image': 'image-value',
@@ -71,6 +72,8 @@ class _ImageScreenState extends State<ImageScreen> {
 
     String message;
     Color color;
+
+    // TODO Handle not being connected to internet.
     switch (response.statusCode) {
       case 400:
         message = 'Error code 400, internal fail. Please report this error.';
