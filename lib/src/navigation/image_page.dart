@@ -107,6 +107,9 @@ class _ImageScreenState extends State<ImageScreen> {
         context, CustomSnackBar.info(message: message, backgroundColor: color));
   }
 
+  /// Compress an image to 95% of its original quality,
+  /// correct angle, and convert the image [file] to the base64
+  /// format.
   Future<String> _compressToBase64(File file) async {
     var dir = await getTemporaryDirectory();
     var targetPath = dir.absolute.path + "/temp.jpg";
@@ -115,6 +118,16 @@ class _ImageScreenState extends State<ImageScreen> {
         autoCorrectionAngle: true);
     final bytes = await result.readAsBytes();
     return base64Encode(bytes);
+  }
+
+  /// Decode a base64 image [source] to a file.
+  /// To be used whenever we implement
+  /// getting images from dawn server.
+  File _fromBase64(String source) {
+    var bytes = base64.decode(source);
+    var file = File("newImage.jpg");
+    file.writeAsBytesSync(bytes);
+    return file;
   }
 
   /// Get the HWID of this device. Used as a parameter
