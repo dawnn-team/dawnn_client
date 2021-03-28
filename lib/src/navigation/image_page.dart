@@ -48,6 +48,7 @@ class _ImageScreenState extends State<ImageScreen> {
   /// Test method to send http request to localhost,
   /// to the port of Dawn server. Used for testing.
   void _sendHTTPRequest(BuildContext context) async {
+    // TODO Check network connectivity before making request?
     var hwid = await _getId();
     var location = await _getLocation();
     // TODO Compress image.
@@ -59,16 +60,27 @@ class _ImageScreenState extends State<ImageScreen> {
       }
     });
 
-    var response = await _client.post(
-        Uri(
-          scheme: 'http',
-          userInfo: '',
-          host: '10.0.2.2',
-          port: 2334,
-          path: '/api/v1/image/',
-        ),
-        body: body,
-        headers: {'Content-type': 'application/json'});
+    var response;
+    try {
+        response = await _client.post(
+          Uri(
+            scheme: 'http',
+            userInfo: '',
+            host: '10.0.2.2',
+            port: 2334,
+            path: '/api/v1/image/',
+          ),
+          body: body,
+          headers: {'Content-type': 'application/json'}).timeout(Duration(seconds: 10));
+    } catch (e) {
+      // Probably timed out.
+      print(e);
+      showTopSnackBar(
+          context,
+          CustomSnackBar.error(
+              message: 'Post failed, check Internet connection and try again.'));
+      return;
+    }
 
     String message;
     Color color;
@@ -76,7 +88,7 @@ class _ImageScreenState extends State<ImageScreen> {
     // TODO Handle not being connected to internet.
     switch (response.statusCode) {
       case 400:
-        message = 'Error code 400, internal fail. Please report this error.';
+        message = 'Error code 400, bad request. Please report this error.';
         color = Colors.red;
         break;
       case 200:
