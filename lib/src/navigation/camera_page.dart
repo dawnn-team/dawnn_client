@@ -39,9 +39,8 @@ class _CameraPageState extends State<CameraPage> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return Align(
-                alignment: Alignment.center,
-                child: CameraPreview(_controller),
-              );
+                  alignment: Alignment.center,
+                  child: CameraPreview(_controller));
             } else {
               return Center(child: CircularProgressIndicator());
             }
@@ -58,8 +57,10 @@ class _CameraPageState extends State<CameraPage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          ImageScreen(image.path, _controller,)));
+                      builder: (context) => ImageScreen(
+                            image.path,
+                            _controller,
+                          )));
             } catch (exception) {
               print(exception);
             }

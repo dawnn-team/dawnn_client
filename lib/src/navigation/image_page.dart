@@ -4,8 +4,10 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
@@ -48,16 +50,13 @@ class _ImageScreenState extends State<ImageScreen> {
   /// Test method to send http request to localhost,
   /// to the port of Dawn server. Used for testing.
   void _sendHTTPRequest(BuildContext context) async {
-    // TODO Check network connectivity before making request?
+    // This is kind of a long method...
     var hwid = await _getId();
     var location = await _getLocation();
-    // TODO Compress image.
+    var image64 = await _compressToBase64(File(imagePath));
+
     var body = jsonEncode({
-      'image': {
-        'image': 'image-value',
-        'HWID': hwid,
-        'location': location.toString()
-      }
+      'image': {'image': image64, 'HWID': hwid, 'location': location.toString()}
     });
 
     var response;
@@ -105,6 +104,16 @@ class _ImageScreenState extends State<ImageScreen> {
 
     showTopSnackBar(
         context, CustomSnackBar.info(message: message, backgroundColor: color));
+  }
+
+  Future<String> _compressToBase64(File file) async {
+    var dir = await getTemporaryDirectory();
+    var targetPath = dir.absolute.path + "/temp.jpg";
+    File result = await FlutterImageCompress.compressAndGetFile(
+        file.absolute.path, targetPath,
+        autoCorrectionAngle: true);
+    final bytes = await result.readAsBytes();
+    return base64Encode(bytes);
   }
 
   // TODO: Fix this
