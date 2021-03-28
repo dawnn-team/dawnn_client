@@ -33,16 +33,16 @@ class _ImageScreenState extends State<ImageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Image')),
-        body: ListView(children: [
-          AspectRatio(
-            aspectRatio: 1.21 / controller.value.aspectRatio,
-            child: Image.file(File(imagePath)),
-          ),
-          ElevatedButton(
-              onPressed: () => {_sendHTTPRequest(context)},
-              child: Text('Post')),
-        ]));
+      appBar: AppBar(title: Text('Image')),
+      body: Align(
+          alignment: Alignment.center,
+          child: ListView(children: [
+            Image.file(File(imagePath)),
+            ElevatedButton(
+                onPressed: () => {_sendHTTPRequest(context)},
+                child: Text('Post'))
+          ])),
+    );
   }
 
   /// Test method to send http request to localhost,
@@ -62,7 +62,7 @@ class _ImageScreenState extends State<ImageScreen> {
 
     var response;
     try {
-        response = await _client.post(
+      response = await _client.post(
           Uri(
             scheme: 'http',
             userInfo: '',
@@ -71,14 +71,17 @@ class _ImageScreenState extends State<ImageScreen> {
             path: '/api/v1/image/',
           ),
           body: body,
-          headers: {'Content-type': 'application/json'}).timeout(Duration(seconds: 10));
+          headers: {
+            'Content-type': 'application/json'
+          }).timeout(Duration(seconds: 10));
     } catch (e) {
       // Probably timed out.
       print(e);
       showTopSnackBar(
           context,
           CustomSnackBar.error(
-              message: 'Post failed, check Internet connection and try again.'));
+              message:
+                  'Post failed, check Internet connection and try again.'));
       return;
     }
 
@@ -101,9 +104,7 @@ class _ImageScreenState extends State<ImageScreen> {
     }
 
     showTopSnackBar(
-        context,
-        CustomSnackBar.info(
-            message: message, backgroundColor: color));
+        context, CustomSnackBar.info(message: message, backgroundColor: color));
   }
 
   // TODO: Fix this

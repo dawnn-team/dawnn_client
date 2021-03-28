@@ -38,9 +38,10 @@ class _CameraPageState extends State<CameraPage> {
           future: _initializeControllerFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return AspectRatio(
-                  aspectRatio: 1.322 / _controller.value.aspectRatio, // debugged value
-                  child: CameraPreview(_controller));
+              return Align(
+                alignment: Alignment.center,
+                child: CameraPreview(_controller),
+              );
             } else {
               return Center(child: CircularProgressIndicator());
             }
