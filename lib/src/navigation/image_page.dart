@@ -60,7 +60,7 @@ class _ImageScreenState extends State<ImageScreen> {
       'image': {'image': image64, 'HWID': hwid, 'location': location.toString()}
     });
 
-    var response;
+    http.Response response;
     try {
       response = await _client.post(
           Uri(
@@ -81,26 +81,22 @@ class _ImageScreenState extends State<ImageScreen> {
           context,
           CustomSnackBar.error(
               message:
-                  'Post failed, check Internet connection and try again.'));
+                  'Post failed: request timed out. No internet?'));
       return;
     }
 
     String message;
     Color color;
 
-    // TODO Handle not being connected to internet.
-    switch (response.statusCode) {
-      case 400:
-        message = 'Error code 400, bad request. Please report this error.';
-        color = Colors.red;
-        break;
-      case 200:
-        message = 'Success! Image has been posted.';
-        color = Colors.green;
-        break;
-      default:
-        message = 'Unexpected response code: ' + response.statusCode.toString();
-        color = Colors.blueAccent;
+    if (response.statusCode == 400) {
+      message = 'Error code 400, bad request. Please report this error.';
+      color = Colors.red;
+    } else if (response.statusCode == 200) {
+      message = 'Success! Image has been posted.';
+      color = Colors.green;
+    } else {
+      message = 'Unexpected response code: ' + response.statusCode.toString();
+      color = Colors.blueAccent;
     }
 
     showTopSnackBar(
