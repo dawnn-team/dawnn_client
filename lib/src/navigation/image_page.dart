@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:crypto/crypto.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -80,8 +81,7 @@ class _ImageScreenState extends State<ImageScreen> {
       showTopSnackBar(
           context,
           CustomSnackBar.error(
-              message:
-                  'Post failed: request timed out. No internet?'));
+              message: 'Post failed: request timed out. No internet?'));
       return;
     }
 
@@ -126,16 +126,20 @@ class _ImageScreenState extends State<ImageScreen> {
     return file;
   }
 
+  // TODO Move methods to a util class
+
   /// Get the HWID of this device. Used as a parameter
   /// for the json http post request.
   Future<String> _getId(BuildContext context) async {
     var deviceInfo = DeviceInfoPlugin();
     if (Theme.of(context).platform == TargetPlatform.iOS) {
       var iosDeviceInfo = await deviceInfo.iosInfo;
-      return iosDeviceInfo.identifierForVendor;
+      return sha256
+          .convert(iosDeviceInfo.identifierForVendor.codeUnits)
+          .toString();
     } else {
       var androidDeviceInfo = await deviceInfo.androidInfo;
-      return androidDeviceInfo.androidId;
+      return sha256.convert(androidDeviceInfo.androidId.codeUnits).toString();
     }
   }
 
