@@ -11,6 +11,7 @@
     <application
             android:name="io.flutter.app.FlutterApplication"
             android:label="dawn_client"
+            android:label="Dawnn"
             android:icon="@mipmap/ic_launcher">
 
         <!-- Android Maps API Key -->

@@ -1,8 +1,7 @@
-import 'package:camera/camera.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-import 'package:dawn_client/src/navigation/camera_page.dart';
-import 'package:dawn_client/src/navigation/maps_page.dart';
-import 'package:dawn_client/src/navigation/settings_page.dart';
+import 'package:dawnn_client/src/navigation/camera_page.dart';
+import 'package:dawnn_client/src/navigation/maps_page.dart';
+import 'package:dawnn_client/src/navigation/settings_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

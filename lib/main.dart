@@ -1,5 +1,5 @@
 import 'package:camera/camera.dart';
-import 'package:dawn_client/src/navigation/home_page.dart';
+import 'package:dawnn_client/src/navigation/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 
@@ -10,23 +10,23 @@ void main() async {
   final cameras = await availableCameras();
   final firstCamera = cameras.first;
 
-  runApp(DawnClient(camera: firstCamera));
+  runApp(DawnnClient(camera: firstCamera));
 }
 
-class DawnClient extends StatefulWidget {
+class DawnnClient extends StatefulWidget {
   // This parameter is passed all the way through the app - is there a better way?
   final camera;
 
-  const DawnClient({Key key, this.camera}) : super(key: key);
+  const DawnnClient({Key key, this.camera}) : super(key: key);
 
   @override
-  _DawnClientState createState() => _DawnClientState(camera);
+  _DawnnClientState createState() => _DawnnClientState(camera);
 }
 
-class _DawnClientState extends State<DawnClient> {
+class _DawnnClientState extends State<DawnnClient> {
   final CameraDescription camera;
 
-  _DawnClientState(this.camera);
+  _DawnnClientState(this.camera);
 
   @override
   Widget build(BuildContext context) {
