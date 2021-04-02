@@ -58,7 +58,10 @@ class _ImageScreenState extends State<ImageScreen> {
     var image64 = await _compressToBase64(File(imagePath));
 
     var body = jsonEncode({
-      'image': {'image': image64, 'HWID': hwid, 'location': location.toString()}
+      'image': image64,
+      'HWID': hwid,
+      'latitude': location.entries.first.value,
+      'longitude': location.entries.last.value
     });
 
     http.Response response;
@@ -68,7 +71,7 @@ class _ImageScreenState extends State<ImageScreen> {
             scheme: 'http',
             userInfo: '',
             host: '10.0.2.2',
-            port: 2334,
+            port: 2423,
             path: '/api/v1/image/',
           ),
           body: body,
@@ -144,14 +147,8 @@ class _ImageScreenState extends State<ImageScreen> {
   }
 
   /// Get the latitude and longitude as a json string, in that exact order.
-  Future<String> _getLocation() async {
+  Future<Map<double, double>> _getLocation() async {
     LocationData locationData = await _location.getLocation();
-    // TODO Fix
-    var locationJson = jsonEncode({
-      'latitude': locationData.latitude,
-      'longitude': locationData.longitude
-    });
-
-    return locationJson;
+    return {locationData.latitude: locationData.longitude};
   }
 }
