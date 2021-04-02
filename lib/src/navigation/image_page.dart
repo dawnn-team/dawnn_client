@@ -53,15 +53,15 @@ class _ImageScreenState extends State<ImageScreen> {
   /// to the port of Dawn server. Used for testing.
   void _sendHTTPRequest(BuildContext context) async {
     // This is kind of a long method...
-    var hwid = await _getId(context);
-    var location = await _getLocation();
-    var image64 = await _compressToBase64(File(imagePath));
+    String hwid = await _getId(context);
+    Map<double, double> location = await _getLocation();
+    String image64 = await _compressToBase64(File(imagePath));
 
     var body = jsonEncode({
       'image': image64,
       'HWID': hwid,
-      'latitude': location.entries.first.value,
-      'longitude': location.entries.last.value
+      'latitude': location.entries.first.key,
+      'longitude': location.entries.first.value
     });
 
     http.Response response;
@@ -146,7 +146,7 @@ class _ImageScreenState extends State<ImageScreen> {
     }
   }
 
-  /// Get the latitude and longitude as a json string, in that exact order.
+  /// Get the latitude mapped to a longitude
   Future<Map<double, double>> _getLocation() async {
     LocationData locationData = await _location.getLocation();
     return {locationData.latitude: locationData.longitude};
