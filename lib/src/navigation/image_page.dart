@@ -49,19 +49,23 @@ class _ImageScreenState extends State<ImageScreen> {
     );
   }
 
-  /// Test method to send http request to localhost,
-  /// to the port of Dawn server. Used for testing.
+  /// Test method to send http post request to localhost,
+  /// to the port of Dawnn server. Currently used for testing.
   void _sendHTTPRequest(BuildContext context) async {
     // This is kind of a long method...
     String hwid = await _getId(context);
     Map<double, double> location = await _getLocation();
     String image64 = await _compressToBase64(File(imagePath));
 
+    // TODO Write serializable class
+
     var body = jsonEncode({
       'image': image64,
       'HWID': hwid,
-      'latitude': location.entries.first.key,
-      'longitude': location.entries.first.value
+      'location' : {
+        'latitude': location.entries.first.key,
+        'longitude': location.entries.first.value
+      }
     });
 
     http.Response response;
