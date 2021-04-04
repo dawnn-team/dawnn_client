@@ -17,7 +17,7 @@ Data _$DataFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
-      'base64image': instance.base64image,
+      'base64image': instance.image,
       'hwid': instance.hwid,
       'location': instance.location?.toJson(),
     };

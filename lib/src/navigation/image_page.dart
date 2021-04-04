@@ -56,30 +56,31 @@ class _ImageScreenState extends State<ImageScreen> {
   /// to the port of Dawnn server. Currently used for testing.
   void _sendHTTPRequest(BuildContext context) async {
     // This is kind of a long method...
-    var body = Data(await _compressToBase64(File(imagePath)),
-            await _getId(context), await _getLocation())
-        .toJson();
+    var data = Data(await _compressToBase64(File(imagePath)),
+        await _getId(context), await _getLocation());
+    var body = json.encode(data.toJson());
 
     http.Response response;
     try {
-      response = await _client
-          .post(
-              Uri(
-                scheme: 'http',
-                userInfo: '',
-                host: '10.0.2.2',
-                port: 2423,
-                path: '/api/v1/image/',
-              ),
-              body: body)
-          .timeout(Duration(seconds: 10));
+      response = await _client.post(
+          Uri(
+            scheme: 'http',
+            userInfo: '',
+            host: '10.0.2.2',
+            port: 2423,
+            path: '/api/v1/image/',
+          ),
+          body: body,
+          headers: {
+            'Content-type': 'application/json'
+          }).timeout(Duration(seconds: 10));
     } catch (e) {
       // Probably timed out.
       print(e);
       showTopSnackBar(
           context,
           CustomSnackBar.error(
-              message: 'Post failed: request timed out. No internet?'));
+              message: 'Post failed. No internet?'));
       return;
     }
 

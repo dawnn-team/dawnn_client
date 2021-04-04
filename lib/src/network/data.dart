@@ -5,9 +5,9 @@ part 'data.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Data {
-  Data(this.base64image, this.hwid, this.location);
+  Data(this.image, this.hwid, this.location);
 
-  String base64image;
+  String image;
   String hwid;
   Location location;
 
