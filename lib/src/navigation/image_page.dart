@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:crypto/crypto.dart';
-import 'package:dawnn_client/src/network/location.dart' as loc;
+import 'package:dawnn_client/src/network/objects/location.dart' as loc;
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
-import '../network/data.dart';
+import '../network/objects/data.dart';
 
 class ImageScreen extends StatefulWidget {
   final imagePath;
@@ -78,9 +78,7 @@ class _ImageScreenState extends State<ImageScreen> {
       // Probably timed out.
       print(e);
       showTopSnackBar(
-          context,
-          CustomSnackBar.error(
-              message: 'Post failed. No internet?'));
+          context, CustomSnackBar.error(message: 'Post failed. No internet?'));
       return;
     }
 

@@ -1,4 +1,4 @@
-import 'package:dawnn_client/src/network/location.dart';
+import 'package:dawnn_client/src/network/objects/location.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'data.g.dart';

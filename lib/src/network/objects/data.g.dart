@@ -8,7 +8,7 @@ part of 'data.dart';
 
 Data _$DataFromJson(Map<String, dynamic> json) {
   return Data(
-    json['base64image'] as String,
+    json['image'] as String,
     json['hwid'] as String,
     json['location'] == null
         ? null
@@ -17,7 +17,7 @@ Data _$DataFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
-      'base64image': instance.image,
+      'image': instance.image,
       'hwid': instance.hwid,
       'location': instance.location?.toJson(),
     };
