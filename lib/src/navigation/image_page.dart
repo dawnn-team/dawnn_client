@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:crypto/crypto.dart';
+import 'package:dawnn_client/src/network/location.dart' as loc;
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,8 @@ import 'package:location/location.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
+
+import '../network/data.dart';
 
 class ImageScreen extends StatefulWidget {
   final imagePath;
@@ -53,20 +56,9 @@ class _ImageScreenState extends State<ImageScreen> {
   /// to the port of Dawnn server. Currently used for testing.
   void _sendHTTPRequest(BuildContext context) async {
     // This is kind of a long method...
-    String hwid = await _getId(context);
-    Map<double, double> location = await _getLocation();
-    String image64 = await _compressToBase64(File(imagePath));
-
-    // TODO Write serializable class
-
-    var body = jsonEncode({
-      'image': image64,
-      'HWID': hwid,
-      'location' : {
-        'latitude': location.entries.first.key,
-        'longitude': location.entries.first.value
-      }
-    });
+    var data = Data(await _compressToBase64(File(imagePath)),
+        await _getId(context), await _getLocation());
+    var body = json.encode(data.toJson());
 
     http.Response response;
     try {
@@ -88,7 +80,7 @@ class _ImageScreenState extends State<ImageScreen> {
       showTopSnackBar(
           context,
           CustomSnackBar.error(
-              message: 'Post failed: request timed out. No internet?'));
+              message: 'Post failed. No internet?'));
       return;
     }
 
@@ -150,9 +142,9 @@ class _ImageScreenState extends State<ImageScreen> {
     }
   }
 
-  /// Get the latitude mapped to a longitude
-  Future<Map<double, double>> _getLocation() async {
+  /// Get the current location as a Location object.
+  Future<loc.Location> _getLocation() async {
     LocationData locationData = await _location.getLocation();
-    return {locationData.latitude: locationData.longitude};
+    return loc.Location(locationData.latitude, locationData.longitude);
   }
 }
