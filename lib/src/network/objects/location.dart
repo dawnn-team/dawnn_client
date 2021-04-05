@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'location.g.dart';
 
+/// This class represents the location of the user.
 @JsonSerializable(explicitToJson: true)
 class Location {
   double latitude;
