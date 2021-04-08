@@ -31,7 +31,7 @@ class _ImageScreenState extends State<ImageScreen> {
           child: ListView(children: [
             Image.file(File(imagePath)),
             ElevatedButton(
-                onPressed: () => {NetworkUtils.postImage(context, imagePath)},
+                onPressed: () => NetworkUtils.postImage(context, imagePath),
                 child: Text('Post'))
           ])),
     );

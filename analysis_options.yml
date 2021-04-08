@@ -2,7 +2,8 @@ include: package:pedantic/analysis_options.yaml
 
 analyzer:
   exclude:
-    - lib/src/locations.g.dart
+    - lib/src/network/objects/data.g.dart
+    - lib/src/network/objects/location.g.dart
 
 linter:
   rules:

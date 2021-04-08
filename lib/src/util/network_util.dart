@@ -15,8 +15,6 @@ import '../network/objects/data.dart';
 /// This is a utility class concerning
 /// server communication.
 class NetworkUtils {
-  static var _client = http.Client();
-
   /// Posts the image at [imagePath] to Dawnn server.
   static void postImage(BuildContext context, String imagePath) async {
     // This is kind of a long method...
@@ -24,9 +22,11 @@ class NetworkUtils {
         await ClientUtils.getHWID(context), await ClientUtils.getLocation());
     var body = json.encode(data.toJson());
 
+    var client = http.Client();
+
     http.Response response;
     try {
-      response = await _client.post(
+      response = await client.post(
           Uri(
             scheme: 'http',
             userInfo: '',
@@ -45,6 +45,8 @@ class NetworkUtils {
           context, CustomSnackBar.error(message: 'Post failed. No internet?'));
       return;
     }
+
+    client.close();
 
     String message;
     Color color;
@@ -85,5 +87,23 @@ class NetworkUtils {
     var file = File("newImage.jpg");
     file.writeAsBytesSync(bytes);
     return file;
+  }
+
+  // TODO How to elegantly get image from server?
+  static Future<Image> getImage() async {
+    // Implement after team discussion.
+    // For now, use placeholder image.
+
+    //      https://picsum.photos/200
+
+    var client = http.Client();
+    var response = await client.get(Uri(
+      scheme: 'https',
+      userInfo: '',
+      path: '/200',
+      host: 'picsum.photos',
+    ));
+
+    client.close();
   }
 }
