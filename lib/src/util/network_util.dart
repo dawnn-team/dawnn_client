@@ -90,20 +90,19 @@ class NetworkUtils {
   }
 
   // TODO How to elegantly get image from server?
-  static Future<Image> getImage() async {
+  static Future<String> getImage() async {
     // Implement after team discussion.
     // For now, use placeholder image.
 
-    //      https://picsum.photos/200
-
     var client = http.Client();
     var response = await client.get(Uri(
-      scheme: 'https',
-      userInfo: '',
-      path: '/200',
-      host: 'picsum.photos',
+      scheme: 'http',
+      path: '/api/v1/image/',
+      host: '10.0.2.2',
+      port: 2423,
     ));
 
     client.close();
+    return response.body;
   }
 }
