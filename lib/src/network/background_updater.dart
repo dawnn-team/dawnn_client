@@ -4,12 +4,15 @@ import 'package:flutter/cupertino.dart';
 /// This class updates information
 /// in the background, such as getting new alerts.
 class BackGroundUpdater {
+  
+  // Do we really need a new class for this?
+  // Might move this elsewhere later.
 
-  static List<Image> getImages() async {
-    // TODO Handle getting updates while application
-    // is in background or closed.
+  /// Updates alerts on the map in Map Page
+  static Future<List<Image>> updateMapAlerts() async {
 
-    String str = await NetworkUtils.getImage();
+
+    String str = await NetworkUtils.getImages();
   }
 
 }
