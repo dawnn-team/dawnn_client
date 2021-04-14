@@ -5,16 +5,12 @@ import 'package:dawnn_client/src/util/client_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 import '../network/objects/data.dart';
 
 /// This is a utility class concerning
 /// server communication.
 class NetworkUtils {
-
-
   /// Posts the image at [imagePath] to Dawnn server.
   static Future<int> postImage(BuildContext context, String imagePath) async {
     var data = Data(await ClientUtils.compressToBase64(File(imagePath)),
@@ -40,10 +36,12 @@ class NetworkUtils {
     } catch (e) {
       // Probably timed out.
       print(e);
-      ClientUtils.displayResponse(context, -1, null, 'Post failed. No internet?');
+      ClientUtils.displayResponse(
+          context, -1, null, 'Post failed. No internet?');
     }
 
-    ClientUtils.displayResponse(context, response.statusCode, 'Success! Image has been posted.', null);
+    ClientUtils.displayResponse(
+        context, response.statusCode, 'Success! Image has been posted.', null);
 
     // TODO Fix calling ClintUtils.displayResponse from NetworkUtils.
 

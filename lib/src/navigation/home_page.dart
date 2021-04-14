@@ -37,7 +37,9 @@ class _HomePageState extends State<HomePage> {
         items: _barItems,
         initialActiveIndex: 1,
         onTap: onTap,
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Theme
+            .of(context)
+            .primaryColor,
       ),
     );
   }
