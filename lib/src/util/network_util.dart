@@ -13,9 +13,10 @@ import '../network/objects/data.dart';
 /// This is a utility class concerning
 /// server communication.
 class NetworkUtils {
+
+
   /// Posts the image at [imagePath] to Dawnn server.
-  static void postImage(BuildContext context, String imagePath) async {
-    // This is kind of a long method...
+  static Future<int> postImage(BuildContext context, String imagePath) async {
     var data = Data(await ClientUtils.compressToBase64(File(imagePath)),
         await ClientUtils.getHWID(context), await ClientUtils.getLocation());
     var body = json.encode(data.toJson());
@@ -39,45 +40,43 @@ class NetworkUtils {
     } catch (e) {
       // Probably timed out.
       print(e);
-      showTopSnackBar(
-          context, CustomSnackBar.error(message: 'Post failed. No internet?'));
-      return;
+      ClientUtils.displayResponse(context, -1, null, 'Post failed. No internet?');
     }
+
+    ClientUtils.displayResponse(context, response.statusCode, 'Success! Image has been posted.', null);
+
+    // TODO Fix calling ClintUtils.displayResponse from NetworkUtils.
 
     client.close();
-
-    String message;
-    Color color;
-
-    if (response.statusCode == 400) {
-      message = 'Error code 400, bad request. Please report this error.';
-      color = Colors.red;
-    } else if (response.statusCode == 200) {
-      message = 'Success! Image has been posted.';
-      color = Colors.green;
-    } else {
-      message = 'Unexpected response code: ' + response.statusCode.toString();
-      color = Colors.blueAccent;
-    }
-
-    showTopSnackBar(
-        context, CustomSnackBar.info(message: message, backgroundColor: color));
+    return response.statusCode;
   }
 
   /// Get images as base64 strings in a list
-  static Future<String> getImages() async {
+  static Future<List<Image>> getImages() async {
     // Implement after team discussion.
     // For now, use placeholder image.
 
     var client = http.Client();
-    var response = await client.get(Uri(
-      scheme: 'http',
-      path: '/api/v1/image/',
-      host: '10.0.2.2',
-      port: 2423,
-    ));
 
-    // TODO Handle errors
+    var parameters = await ClientUtils.getLocation();
+
+    // Adding body to GET is bad practice..
+    // But we write both back-end and front-end
+    // How bad can it be.
+    var response;
+    try {
+      response = await client.get(Uri(
+          scheme: 'http',
+          path: '/api/v1/image/',
+          host: '10.0.2.2',
+          port: 2423,
+          queryParameters: parameters.toJson()));
+    } catch (exception) {
+      return null;
+    }
+
+    // TODO Parse Image list out of response.
+
     client.close();
     return response.body;
   }

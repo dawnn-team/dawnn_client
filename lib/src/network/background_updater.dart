@@ -1,3 +1,4 @@
+import 'package:dawnn_client/src/util/client_util.dart';
 import 'package:dawnn_client/src/util/network_util.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -12,7 +13,13 @@ class BackGroundUpdater {
   static Future<List<Image>> updateMapAlerts() async {
 
 
-    String str = await NetworkUtils.getImages();
+    List<Image> data = await NetworkUtils.getImages();
+    if (data == null) {
+      // We don't have a BuildContext, since this should be a background
+      // compatible task. How to handle errors, if we can't let the user know about it?
+    }
+
+
   }
 
 }

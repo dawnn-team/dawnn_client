@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:location/location.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 /// This is a utility class concerning client related actions,
 /// such as getting location or HWID.
@@ -57,5 +59,33 @@ class ClientUtils {
     var file = File("newImage.jpg");
     file.writeAsBytesSync(bytes);
     return file;
+  }
+
+  /// Display information to a user regarding an http response [responseCode],
+  /// showing either [successText] or [failText].
+  /// [failText] is predetermined for status code 400.
+  /// To fail right away, [responseCode] should be -1.
+  static void displayResponse(BuildContext context, int responseCode,
+      String successText, String failText) {
+    String message;
+    Color color;
+    if (responseCode == -1) {
+      // Everything else
+      showTopSnackBar(context, CustomSnackBar.error(message: failText));
+    }
+
+    if (responseCode == 400) {
+      message = 'Error code 400, bad request. Please report this error.';
+      color = Colors.red;
+    } else if (responseCode == 200) {
+      message = successText;
+      color = Colors.green;
+    } else {
+      message = 'Unexpected response code: ' + responseCode.toString();
+      color = Colors.blueAccent;
+    }
+
+    showTopSnackBar(
+        context, CustomSnackBar.info(message: message, backgroundColor: color));
   }
 }
