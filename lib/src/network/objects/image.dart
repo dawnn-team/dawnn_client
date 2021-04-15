@@ -3,18 +3,21 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'image.g.dart';
 
-/// This class represents data that is transferred from the
-/// client to the server.
+/// This is an image sent to and from the server. Based on its
+/// origin, hwid or uuid may be null. Contains image as base64
+/// string, the location of image origin, a user caption,
+/// hwid and uuid, which may be null for security reasons.
 @JsonSerializable(explicitToJson: true)
 class Image {
   Image(this.base64, this.caption, this.location);
 
   String base64;
   String caption;
-
-  // Security risk?
   Location location;
 
+  // Re-use one object and match server design:
+  // String? hwid;
+  // String? uuid;
   factory Image.fromMap(Map<String, dynamic> json) => _$ImageFromJson(json);
 
   Map<String, dynamic> toJson() => _$ImageToJson(this);

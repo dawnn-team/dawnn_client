@@ -7,14 +7,19 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../network/objects/data.dart';
+import '../network/objects/image.dart' as image;
 
 /// This is a utility class concerning
 /// server communication.
 class NetworkUtils {
   /// Posts the image at [imagePath] to Dawnn server.
   static Future<int> postImage(BuildContext context, String imagePath) async {
-    var data = Data(await ClientUtils.compressToBase64(File(imagePath)),
-        await ClientUtils.getHWID(context), await ClientUtils.getLocation());
+    // FIXME This won't work correctly with captions - need to construct Image earlier.
+
+    var data = Data(
+        image.Image(await ClientUtils.compressToBase64(File(imagePath)),
+            'Feature not yet implemented.', await ClientUtils.getLocation()),
+        await ClientUtils.getHWID(context));
     var body = json.encode(data.toJson());
 
     var client = http.Client();
@@ -50,10 +55,7 @@ class NetworkUtils {
   }
 
   /// Get images as base64 strings in a list
-  static Future<List<Image>> getImages() async {
-    // Implement after team discussion.
-    // For now, use placeholder image.
-
+  static Future<List<image.Image>> getImages() async {
     var client = http.Client();
 
     var parameters = await ClientUtils.getLocation();
@@ -70,12 +72,15 @@ class NetworkUtils {
           port: 2423,
           queryParameters: parameters.toJson()));
     } catch (exception) {
+      print(exception);
       return null;
     }
 
-    // TODO Parse Image list out of response.
+    List<image.Image> images = (json.decode(response.body) as List)
+        .map((i) => image.Image.fromMap(i))
+        .toList();
 
     client.close();
-    return response.body;
+    return images;
   }
 }

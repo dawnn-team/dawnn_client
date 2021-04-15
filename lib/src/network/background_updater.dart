@@ -1,5 +1,6 @@
 import 'package:dawnn_client/src/util/network_util.dart';
-import 'package:flutter/cupertino.dart';
+
+import '../network/objects/image.dart';
 
 /// This class updates information
 /// in the background, such as getting new alerts.
