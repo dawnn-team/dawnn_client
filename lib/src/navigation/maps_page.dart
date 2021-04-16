@@ -1,3 +1,4 @@
+import 'package:dawnn_client/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -11,6 +12,16 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   final LatLng _center = const LatLng(45.521563, -122.677433);
   Location _location = Location();
+
+  final Map<String, Marker> _markers = {};
+
+  Map<String, Marker> get markers {
+    return _markers;
+  }
+
+  _MapPageState() {
+    DawnnClient.mapPage = this;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +42,9 @@ class _MapPageState extends State<MapPage> {
   bool _once = true;
 
   /// Called when the map is created.
-  void _onMapCreated(GoogleMapController context) {
-    // TODO Request alert data from dawn server.
+  void _onMapCreated(GoogleMapController context) async {
+
+
     _location.onLocationChanged.listen((loc) {
       if (_once) {
         context.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
