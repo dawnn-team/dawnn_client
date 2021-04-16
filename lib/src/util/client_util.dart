@@ -69,9 +69,10 @@ class ClientUtils {
       String successText, String failText) {
     String message;
     Color color;
+
     if (responseCode == -1) {
-      // Everything else
       showTopSnackBar(context, CustomSnackBar.error(message: failText));
+      return;
     }
 
     if (responseCode == 400) {

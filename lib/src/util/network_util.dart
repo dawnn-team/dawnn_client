@@ -43,6 +43,7 @@ class NetworkUtils {
       print(e);
       ClientUtils.displayResponse(
           context, -1, null, 'Post failed. No internet?');
+      return null;
     }
 
     ClientUtils.displayResponse(
