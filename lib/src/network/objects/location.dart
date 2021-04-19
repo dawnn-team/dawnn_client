@@ -5,10 +5,14 @@ part 'location.g.dart';
 /// This class represents the location of the user.
 @JsonSerializable(explicitToJson: true)
 class Location {
+  Location(this.latitude, this.longitude) {
+    this.time = DateTime.now().toUtc();
+  }
+
+
   double latitude;
   double longitude;
-
-  Location(this.latitude, this.longitude);
+  DateTime time;
 
   factory Location.fromJson(Map<String, dynamic> json) =>
       _$LocationFromJson(json);

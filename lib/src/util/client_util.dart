@@ -38,9 +38,9 @@ class ClientUtils {
     }
   }
 
-  /// Compress an image to 95% of its original quality,
-  /// correct angle, and convert the image [file] to the base64
-  /// format.
+  /// Compress an image [file] to 95% of its original quality,
+  /// correct angle, remove EXIF metadata, and convert
+  /// to the base64 format.
   static Future<String> compressToBase64(File file) async {
     var dir = await getTemporaryDirectory();
     var targetPath = dir.absolute.path + "/temp.jpg";

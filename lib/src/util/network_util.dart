@@ -6,8 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../network/objects/data.dart';
-import '../network/objects/image.dart' as image;
+import '../network/objects/image.dart' as img;
 
 /// This is a utility class concerning
 /// server communication.
@@ -16,10 +15,13 @@ class NetworkUtils {
   static Future<int> postImage(BuildContext context, String imagePath) async {
     // FIXME This won't work correctly with captions - need to construct Image earlier.
 
-    var data = Data(
-        image.Image(await ClientUtils.compressToBase64(File(imagePath)),
-            'Feature not yet implemented.', await ClientUtils.getLocation()),
-        await ClientUtils.getHWID(context));
+    var data = img.Image(
+        await ClientUtils.compressToBase64(File(imagePath)),
+        'Feature not yet implemented.',
+        await ClientUtils.getLocation(),
+        await ClientUtils.getHWID(context),
+        '');
+
     var body = json.encode(data.toJson());
 
     var client = http.Client();
@@ -56,7 +58,7 @@ class NetworkUtils {
   }
 
   /// Get images as base64 strings in a list
-  static Future<List<image.Image>> getImages() async {
+  static Future<List<img.Image>> getImages() async {
     var client = http.Client();
 
     var parameters = await ClientUtils.getLocation();
@@ -77,8 +79,8 @@ class NetworkUtils {
       return null;
     }
 
-    List<image.Image> images = (json.decode(response.body) as List)
-        .map((i) => image.Image.fromMap(i))
+    List<img.Image> images = (json.decode(response.body) as List)
+        .map((i) => img.Image.fromMap(i))
         .toList();
 
     client.close();

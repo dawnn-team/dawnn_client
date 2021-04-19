@@ -15,7 +15,8 @@ class BackGroundUpdater {
     // Probably won't use FCM to sync while app is in use.
 
     List<Image> data = await NetworkUtils.getImages();
-    if (data == null || DawnnClient.mapPage == null) { // No new data or map hasn't been opened
+    if (data == null || DawnnClient.mapPage == null) {
+      // No new data or map hasn't been opened
       return;
     }
 
@@ -24,4 +25,6 @@ class BackGroundUpdater {
     // Also look at this.
     // https://flutter.dev/docs/development/packages-and-plugins/background-processes
   }
+
+  static void updateLocation() async {}
 }

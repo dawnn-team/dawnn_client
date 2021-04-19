@@ -9,15 +9,17 @@ part 'image.g.dart';
 /// hwid and uuid, which may be null for security reasons.
 @JsonSerializable(explicitToJson: true)
 class Image {
-  Image(this.base64, this.caption, this.location);
+  Image(this.base64, this.caption, this.location, this.hwid, this.uuid);
 
   String base64;
   String caption;
   Location location;
 
   // Re-use one object and match server design:
-  // String? hwid;
-  // String? uuid;
+  // TODO: Make nullable
+  String hwid;
+  String uuid;
+
   factory Image.fromMap(Map<String, dynamic> json) => _$ImageFromJson(json);
 
   Map<String, dynamic> toJson() => _$ImageToJson(this);
