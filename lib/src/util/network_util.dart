@@ -20,7 +20,7 @@ class NetworkUtils {
         'Feature not yet implemented.',
         await ClientUtils.getLocation(),
         await ClientUtils.getHWID(context),
-        '');
+        ''); // uuid is null because server assigns it, not us.
 
     var body = json.encode(data.toJson());
 

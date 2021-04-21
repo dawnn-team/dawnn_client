@@ -5,10 +5,7 @@ part 'location.g.dart';
 /// This class represents the location of the user.
 @JsonSerializable(explicitToJson: true)
 class Location {
-  Location(this.latitude, this.longitude) {
-    this.time = DateTime.now().toUtc();
-  }
-
+  Location(this.latitude, this.longitude, this.time);
 
   double latitude;
   double longitude;
