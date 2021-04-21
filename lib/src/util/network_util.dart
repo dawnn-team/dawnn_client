@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dawnn_client/src/network/objects/user.dart';
 import 'package:dawnn_client/src/util/client_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class NetworkUtils {
         await ClientUtils.compressToBase64(File(imagePath)),
         'Feature not yet implemented.',
         await ClientUtils.getLocation(),
-        await ClientUtils.getHWID(context),
+        await ClientUtils.getHWID(),
         ''); // uuid is null because server assigns it, not us.
 
     var body = json.encode(data.toJson());
@@ -85,5 +86,26 @@ class NetworkUtils {
 
     client.close();
     return images;
+  }
+
+  /// Send a location update to the server.
+  static void updateLocation() async {
+    var client = http.Client();
+
+    var user =
+        User(await ClientUtils.getLocation(), await ClientUtils.getHWID());
+
+    client.post(
+        Uri(
+          scheme: 'http',
+          userInfo: '',
+          host: '10.0.2.2',
+          port: 2423,
+          path: '/api/v1/location/',
+        ),
+        body: json.encode(user),
+        headers: {'Content-type': 'application/json'});
+
+    client.close();
   }
 }

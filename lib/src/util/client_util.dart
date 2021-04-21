@@ -20,21 +20,26 @@ class ClientUtils {
   /// Get the current location as a Location object.
   static Future<loc.Location> getLocation() async {
     LocationData locationData = await _location.getLocation();
-    return loc.Location(locationData.latitude, locationData.longitude, DateTime.now().toUtc());
+    return loc.Location(
+        locationData.latitude, locationData.longitude, DateTime.now().toUtc());
   }
 
   /// Get the HWID of this device. Used as a parameter
   /// for the json http post request.
-  static Future<String> getHWID(BuildContext context) async {
+  static Future<String> getHWID() async {
     var deviceInfo = DeviceInfoPlugin();
-    if (Theme.of(context).platform == TargetPlatform.iOS) {
+
+    if (Platform.isIOS) {
       var iosDeviceInfo = await deviceInfo.iosInfo;
       return sha256
           .convert(iosDeviceInfo.identifierForVendor.codeUnits)
           .toString();
-    } else {
+    } else if (Platform.isAndroid) {
       var androidDeviceInfo = await deviceInfo.androidInfo;
       return sha256.convert(androidDeviceInfo.androidId.codeUnits).toString();
+    } else {
+      // This shouldn't be possible, but we'll handle it anyway.
+      return null;
     }
   }
 
