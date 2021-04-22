@@ -15,13 +15,14 @@ class NetworkUtils {
   /// Posts the image at [imagePath] to Dawnn server.
   static Future<int> postImage(BuildContext context, String imagePath) async {
     // FIXME This won't work correctly with captions - need to construct Image earlier.
+    sendLocationUpdate();
 
     var data = img.Image(
         await ClientUtils.compressToBase64(File(imagePath)),
         'Feature not yet implemented.',
         await ClientUtils.getLocation(),
         await ClientUtils.getHWID(),
-        ''); // uuid is null because server assigns it, not us.
+        ''); // uuid is empty because server assigns it, not us.
 
     var body = json.encode(data.toJson());
 
@@ -55,11 +56,14 @@ class NetworkUtils {
     // TODO Fix calling ClintUtils.displayResponse from NetworkUtils.
 
     client.close();
+    // Return code is useless right now...
     return response.statusCode;
   }
 
   /// Get images as base64 strings in a list
+  // Implicitly calls sendLocationUpdate();
   static Future<List<img.Image>> getImages() async {
+    sendLocationUpdate();
     var client = http.Client();
 
     var parameters = await ClientUtils.getLocation();
@@ -89,7 +93,7 @@ class NetworkUtils {
   }
 
   /// Send a location update to the server.
-  static void updateLocation() async {
+  static void sendLocationUpdate() async {
     var client = http.Client();
 
     var user =
