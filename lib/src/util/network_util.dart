@@ -15,7 +15,7 @@ class NetworkUtils {
   /// Posts the image at [imagePath] to Dawnn server.
   static Future<int> postImage(BuildContext context, String imagePath) async {
     // FIXME This won't work correctly with captions - need to construct Image earlier.
-    sendLocationUpdate();
+    sendClientUpdate();
 
     var data = img.Image(
         await ClientUtils.compressToBase64(File(imagePath)),
@@ -26,9 +26,10 @@ class NetworkUtils {
 
     var body = json.encode(data.toJson());
 
+    http.Response response;
+
     var client = http.Client();
 
-    http.Response response;
     try {
       response = await client.post(
           Uri(
@@ -56,29 +57,33 @@ class NetworkUtils {
     // TODO Fix calling ClintUtils.displayResponse from NetworkUtils.
 
     client.close();
+
     // Return code is useless right now...
     return response.statusCode;
   }
 
-  /// Get images as base64 strings in a list
-  // Implicitly calls sendLocationUpdate();
+  /// Get images near our location in a list. Implicitly calls sendLocationUpdate()
+  /// In order to receive the data most relevant to our location.
   static Future<List<img.Image>> getImages() async {
-    sendLocationUpdate();
+    print('Requesting images.');
+    sendClientUpdate();
     var client = http.Client();
 
-    var parameters = await ClientUtils.getLocation();
+    var user =
+        User(await ClientUtils.getLocation(), await ClientUtils.getHWID());
 
-    // Adding body to GET is bad practice..
-    // But we write both back-end and front-end
-    // How bad can it be.
+    // Use POST instead of GET with body.
     var response;
     try {
-      response = await client.get(Uri(
-          scheme: 'http',
-          path: '/api/v1/image/',
-          host: '10.0.2.2',
-          port: 2423,
-          queryParameters: parameters.toJson()));
+      response = await client.post(
+          Uri(
+            scheme: 'http',
+            path: '/api/v1/image/request',
+            host: '10.0.2.2',
+            port: 2423,
+          ),
+          body: json.encode(user.toJson()),
+          headers: {'Content-type': 'application/json'});
     } catch (exception) {
       print(exception);
       return null;
@@ -92,8 +97,11 @@ class NetworkUtils {
     return images;
   }
 
-  /// Send a location update to the server.
-  static void sendLocationUpdate() async {
+  /// Update the client's state on the server.
+  static void sendClientUpdate() async {
+    // FIXME The server doesn't see this for whatever reason. Multiple HTTP requests?
+    // TODO Optimize update frequency.
+    print('Sending location update.');
     var client = http.Client();
 
     var user =
@@ -105,7 +113,7 @@ class NetworkUtils {
           userInfo: '',
           host: '10.0.2.2',
           port: 2423,
-          path: '/api/v1/location/',
+          path: '/api/v1/user/',
         ),
         body: json.encode(user),
         headers: {'Content-type': 'application/json'});

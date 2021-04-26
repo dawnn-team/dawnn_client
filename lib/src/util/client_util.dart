@@ -20,8 +20,7 @@ class ClientUtils {
   /// Get the current location as a Location object.
   static Future<loc.Location> getLocation() async {
     LocationData locationData = await _location.getLocation();
-    return loc.Location(
-        locationData.latitude, locationData.longitude, DateTime.now().toUtc());
+    return loc.Location(locationData.latitude, locationData.longitude);
   }
 
   /// Get the HWID of this device. Used as a parameter

@@ -10,12 +10,11 @@ Location _$LocationFromJson(Map<String, dynamic> json) {
   return Location(
     (json['latitude'] as num)?.toDouble(),
     (json['longitude'] as num)?.toDouble(),
-    json['time'] == null ? null : DateTime.parse(json['time'] as String),
-  );
+  )..time = json['time'] as int;
 }
 
 Map<String, dynamic> _$LocationToJson(Location instance) => <String, dynamic>{
       'latitude': instance.latitude,
       'longitude': instance.longitude,
-      'time': instance.time?.toIso8601String(),
+      'time': instance.time,
     };

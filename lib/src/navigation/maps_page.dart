@@ -1,4 +1,6 @@
 import 'package:dawnn_client/main.dart';
+import 'package:dawnn_client/src/util/client_util.dart';
+import 'package:dawnn_client/src/util/network_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -38,19 +40,25 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
-  // This is a lazy way to set the position once.
-  bool _once = true;
-
   /// Called when the map is created.
   void _onMapCreated(GoogleMapController context) async {
+    print('Map loaded, requesting image data.');
+    NetworkUtils.getImages();
 
+    var currentLoc = await ClientUtils.getLocation();
 
-    _location.onLocationChanged.listen((loc) {
-      if (_once) {
-        context.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-            target: LatLng(loc.latitude, loc.longitude), zoom: 15)));
-        _once = false;
-      }
+    // context.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+    //     target: LatLng(currentLoc.latitude, currentLoc.longitude), zoom: 15)));
+    //
+    // _location.changeSettings(
+    //     accuracy: LocationAccuracy.balanced, interval: 1000, distanceFilter: 10);
+
+    _location.onLocationChanged.listen((location) {
+      // print('Location changed, requesting new image data.');
+      // NetworkUtils.getImages();
+
+      // context.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+      //     target: LatLng(currentLoc.latitude, currentLoc.longitude), zoom: 15)));
     });
   }
 }
