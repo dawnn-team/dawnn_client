@@ -1,23 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'data.dart';
+part of 'image.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Data _$DataFromJson(Map<String, dynamic> json) {
-  return Data(
-    json['image'] as String,
-    json['hwid'] as String,
+Image _$ImageFromJson(Map<String, dynamic> json) {
+  return Image(
+    json['base64'] as String,
+    json['caption'] as String,
     json['location'] == null
         ? null
         : Location.fromJson(json['location'] as Map<String, dynamic>),
+    json['hwid'] as String,
+    json['uuid'] as String,
   );
 }
 
-Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
-      'image': instance.image,
-      'hwid': instance.hwid,
+Map<String, dynamic> _$ImageToJson(Image instance) => <String, dynamic>{
+      'base64': instance.base64,
+      'caption': instance.caption,
       'location': instance.location?.toJson(),
+      'hwid': instance.hwid,
+      'uuid': instance.uuid,
     };

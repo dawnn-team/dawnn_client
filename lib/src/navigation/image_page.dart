@@ -32,7 +32,7 @@ class _ImageScreenState extends State<ImageScreen> {
             Image.file(File(imagePath)),
             ElevatedButton(
                 onPressed: () => NetworkUtils.postImage(context, imagePath),
-                child: Text('Post'))
+                child: Text('Post image'))
           ])),
     );
   }
