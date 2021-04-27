@@ -17,6 +17,10 @@ class Location {
   // Dart's int can be fit into Java's long.
   int time;
 
+  String toString() {
+    return 'lat ' + latitude.toString() + '; lon ' + longitude.toString() + '; at ' + time.toString();
+  }
+
   factory Location.fromJson(Map<String, dynamic> json) =>
       _$LocationFromJson(json);
 

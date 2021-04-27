@@ -20,6 +20,10 @@ class Image {
   String hwid;
   String uuid;
 
+  String toString() {
+    return 'image ' + base64 + '; caption ' + caption + '; at ' + location.toString() + '; from ' + hwid + '; with uuid ' + uuid;
+  }
+
   factory Image.fromMap(Map<String, dynamic> json) => _$ImageFromJson(json);
 
   Map<String, dynamic> toJson() => _$ImageToJson(this);

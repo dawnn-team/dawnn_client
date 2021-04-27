@@ -59,7 +59,7 @@ class NetworkUtils {
 
     client.close();
 
-    print('Posted image');
+    print('Posted image.');
     // Return code is useless right now...
     return response.statusCode;
   }
@@ -97,7 +97,13 @@ class NetworkUtils {
 
     print(images);
 
+    for (var image in images) {
+      print(image);
+    }
+
     client.close();
+
+    print('Received images.');
     return images;
   }
 
@@ -121,7 +127,7 @@ class NetworkUtils {
         body: json.encode(user),
         headers: {'Content-type': 'application/json'});
 
-    print('Sent client update');
+    print('Sent client update.');
     client.close();
   }
 }
