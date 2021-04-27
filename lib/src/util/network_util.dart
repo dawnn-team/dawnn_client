@@ -15,7 +15,8 @@ class NetworkUtils {
   /// Posts the image at [imagePath] to Dawnn server.
   static Future<int> postImage(BuildContext context, String imagePath) async {
     // FIXME This won't work correctly with captions - need to construct Image earlier.
-    sendClientUpdate();
+    await sendClientUpdate();
+    print('Posting image.');
 
     var data = img.Image(
         await ClientUtils.compressToBase64(File(imagePath)),
@@ -58,13 +59,14 @@ class NetworkUtils {
 
     client.close();
 
+    print('Posted image');
     // Return code is useless right now...
     return response.statusCode;
   }
 
-  /// Get images near our location in a list. Implicitly calls sendLocationUpdate()
+  /// Get images near our location in a list. Calls sendLocationUpdate()
   /// In order to receive the data most relevant to our location.
-  static Future<List<img.Image>> getImages() async {
+  static Future<List<img.Image>> requestImages() async {
     print('Requesting images.');
     sendClientUpdate();
     var client = http.Client();
@@ -93,15 +95,16 @@ class NetworkUtils {
         .map((i) => img.Image.fromMap(i))
         .toList();
 
+    print(images);
+
     client.close();
     return images;
   }
 
-  /// Update the client's state on the server.
-  static void sendClientUpdate() async {
-    // FIXME The server doesn't see this for whatever reason. Multiple HTTP requests?
+  /// Send a client update to the server.
+  static Future<void> sendClientUpdate() async {
     // TODO Optimize update frequency.
-    print('Sending location update.');
+    print('Sending client update.');
     var client = http.Client();
 
     var user =
@@ -118,6 +121,7 @@ class NetworkUtils {
         body: json.encode(user),
         headers: {'Content-type': 'application/json'});
 
+    print('Sent client update');
     client.close();
   }
 }

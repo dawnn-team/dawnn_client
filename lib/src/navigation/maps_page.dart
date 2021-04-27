@@ -42,10 +42,10 @@ class _MapPageState extends State<MapPage> {
 
   /// Called when the map is created.
   void _onMapCreated(GoogleMapController context) async {
-    print('Map loaded, requesting image data.');
-    NetworkUtils.getImages();
+    // print('Map loaded, requesting image data.');
+    // NetworkUtils.requestImages();
 
-    var currentLoc = await ClientUtils.getLocation();
+    // var currentLoc = await ClientUtils.getLocation();
 
     // context.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
     //     target: LatLng(currentLoc.latitude, currentLoc.longitude), zoom: 15)));
