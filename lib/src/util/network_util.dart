@@ -95,12 +95,6 @@ class NetworkUtils {
         .map((i) => img.Image.fromMap(i))
         .toList();
 
-    print(images);
-
-    for (var image in images) {
-      print(image);
-    }
-
     client.close();
 
     print('Received images.');

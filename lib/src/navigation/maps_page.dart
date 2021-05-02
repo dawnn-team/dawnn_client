@@ -1,5 +1,5 @@
 import 'package:dawnn_client/main.dart';
-import 'package:dawnn_client/src/util/client_util.dart';
+import 'package:dawnn_client/src/network/objects/image.dart' as img;
 import 'package:dawnn_client/src/util/network_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,15 +15,11 @@ class _MapPageState extends State<MapPage> {
   final LatLng _center = const LatLng(45.521563, -122.677433);
   Location _location = Location();
 
-  final Map<String, Marker> _markers = {};
-
-  Map<String, Marker> get markers {
-    return _markers;
-  }
-
   _MapPageState() {
     DawnnClient.mapPage = this;
   }
+
+  Map<MarkerId, Marker> _markers = <MarkerId, Marker>{};
 
   @override
   Widget build(BuildContext context) {
@@ -36,15 +32,27 @@ class _MapPageState extends State<MapPage> {
         mapType: MapType.hybrid,
         onMapCreated: _onMapCreated,
         initialCameraPosition: CameraPosition(target: _center, zoom: 15),
+        markers: Set.of(_markers.values),
       ),
     );
   }
 
   /// Called when the map is created.
   void _onMapCreated(GoogleMapController context) async {
-    // print('Map loaded, requesting image data.');
-    // NetworkUtils.requestImages();
+    print('Map loaded, requesting image data.');
+    List<img.Image> images = await NetworkUtils.requestImages();
 
+    MarkerId id = MarkerId('1');
+    var marker = Marker(
+        markerId: id,
+        position: LatLng(
+            images.first.location.latitude, images.first.location.longitude),
+        infoWindow:
+            InfoWindow(title: "sample title", onTap: () => print('tapped icon')));
+
+    setState(() {
+      _markers[id] = marker;
+    });
     // var currentLoc = await ClientUtils.getLocation();
 
     // context.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(

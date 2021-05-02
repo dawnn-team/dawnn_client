@@ -11,14 +11,15 @@ part 'image.g.dart';
 class Image {
   Image(this.base64, this.caption, this.location, this.hwid, this.uuid);
 
+  // Match server design to re-use one object
+
   String base64;
   String caption;
   Location location;
+  String uuid;
 
-  // Re-use one object and match server design:
   // TODO: Make nullable
   String hwid;
-  String uuid;
 
   String toString() {
     return 'image ' + base64 + '; caption ' + caption + '; at ' + location.toString() + '; from ' + hwid + '; with uuid ' + uuid;
