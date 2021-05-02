@@ -39,20 +39,12 @@ class _MapPageState extends State<MapPage> {
 
   /// Called when the map is created.
   void _onMapCreated(GoogleMapController context) async {
-    print('Map loaded, requesting image data.');
+    print('Map loaded, requesting images.');
     List<img.Image> images = await NetworkUtils.requestImages();
 
-    MarkerId id = MarkerId('1');
-    var marker = Marker(
-        markerId: id,
-        position: LatLng(
-            images.first.location.latitude, images.first.location.longitude),
-        infoWindow:
-            InfoWindow(title: "sample title", onTap: () => print('tapped icon')));
-
-    setState(() {
-      _markers[id] = marker;
-    });
+    for (var image in images) {
+      _createMarkerFromImage(image);
+    }
     // var currentLoc = await ClientUtils.getLocation();
 
     // context.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
@@ -67,6 +59,22 @@ class _MapPageState extends State<MapPage> {
 
       // context.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
       //     target: LatLng(currentLoc.latitude, currentLoc.longitude), zoom: 15)));
+    });
+  }
+
+  void _createMarkerFromImage(img.Image image) {
+    MarkerId markerId = MarkerId(image.uuid);
+
+    Marker marker = Marker(
+        markerId: markerId,
+        alpha: 0.75,
+        consumeTapEvents: false,
+        // Have custom image info window?
+        infoWindow: InfoWindow(title: image.caption),
+        position: LatLng(image.location.latitude, image.location.longitude));
+
+    setState(() {
+      _markers[markerId] = marker;
     });
   }
 }

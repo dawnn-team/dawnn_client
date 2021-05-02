@@ -19,9 +19,9 @@ Image _$ImageFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$ImageToJson(Image instance) => <String, dynamic>{
-      'base64': instance.base64,
-      'caption': instance.caption,
-      'location': instance.location?.toJson(),
-      'hwid': instance.hwid,
-      'uuid': instance.uuid,
+      'base64': instance._base64,
+      'caption': instance._caption,
+      'location': instance._location?.toJson(),
+      'hwid': instance._hwid,
+      'uuid': instance._uuid,
     };
