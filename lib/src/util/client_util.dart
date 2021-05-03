@@ -58,9 +58,10 @@ class ClientUtils {
   /// Decode a base64 image [source] to a file.
   /// To be used whenever we implement
   /// getting images from dawn server.
-  static File fromBase64(String source) {
+  static Future<File> fromBase64(String source) async {
+    var dir = await getTemporaryDirectory();
     var bytes = base64.decode(source);
-    var file = File("newImage.jpg");
+    var file = File(dir.absolute.path + '/newImage.jpg');
     file.writeAsBytesSync(bytes);
     return file;
   }

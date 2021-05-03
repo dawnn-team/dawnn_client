@@ -1,5 +1,6 @@
 import 'package:dawnn_client/main.dart';
 import 'package:dawnn_client/src/network/objects/image.dart' as img;
+import 'package:dawnn_client/src/util/client_util.dart';
 import 'package:dawnn_client/src/util/network_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -62,8 +63,13 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
-  void _createMarkerFromImage(img.Image image) {
+  void _createMarkerFromImage(img.Image image) async {
     MarkerId markerId = MarkerId(image.uuid);
+
+    var imageFile = await ClientUtils.fromBase64(image.base64);
+    var imageBytes = await imageFile.readAsBytes();
+
+    // TODO Shrink and frame the icon marker.
 
     Marker marker = Marker(
         markerId: markerId,
@@ -71,7 +77,8 @@ class _MapPageState extends State<MapPage> {
         consumeTapEvents: false,
         // Have custom image info window?
         infoWindow: InfoWindow(title: image.caption),
-        position: LatLng(image.location.latitude, image.location.longitude));
+        position: LatLng(image.location.latitude, image.location.longitude),
+        icon: BitmapDescriptor.fromBytes(imageBytes));
 
     setState(() {
       _markers[markerId] = marker;
