@@ -1,6 +1,10 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:dawnn_client/main.dart';
 import 'package:dawnn_client/src/network/objects/image.dart' as img;
 import 'package:dawnn_client/src/util/client_util.dart';
+import 'package:dawnn_client/src/util/generator.dart';
 import 'package:dawnn_client/src/util/network_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +20,10 @@ class _MapPageState extends State<MapPage> {
   final LatLng _center = const LatLng(45.521563, -122.677433);
   Location _location = Location();
 
+  // To be used when creating markers - call back only returns
+  // bitmap data, not captions, uuid, or location.
+  List<img.Image> imageData = <img.Image>[];
+
   _MapPageState() {
     DawnnClient.mapPage = this;
   }
@@ -23,53 +31,112 @@ class _MapPageState extends State<MapPage> {
   Map<MarkerId, Marker> _markers = <MarkerId, Marker>{};
 
   @override
+  void dispose() {
+    super.dispose();
+    imageData.clear();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Maps Page'), // TODO Load name according to language
-        centerTitle: true,
-      ),
-      body: GoogleMap(
-        mapType: MapType.hybrid,
-        onMapCreated: _onMapCreated,
-        initialCameraPosition: CameraPosition(target: _center, zoom: 15),
-        markers: Set.of(_markers.values),
-      ),
-    );
+        appBar: AppBar(
+          title: Text('Maps Page'), // TODO Load name according to language
+          centerTitle: true,
+        ),
+        body: GoogleMap(
+          mapType: MapType.hybrid,
+          onMapCreated: (GoogleMapController googleMapController) =>
+              {_onMapCreated(googleMapController, context)},
+          initialCameraPosition: CameraPosition(target: _center, zoom: 15),
+          markers: Set.of(_markers.values),
+        ));
   }
 
   /// Called when the map is created.
-  void _onMapCreated(GoogleMapController context) async {
+  void _onMapCreated(
+      GoogleMapController googleMapController, BuildContext context) async {
     print('Map loaded, requesting images.');
-    List<img.Image> images = await NetworkUtils.requestImages();
 
-    for (var image in images) {
-      _createMarkerFromImage(image);
-    }
+    _prepareGenerateMarkers(await NetworkUtils.requestImages());
+
     // var currentLoc = await ClientUtils.getLocation();
-
     // context.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
     //     target: LatLng(currentLoc.latitude, currentLoc.longitude), zoom: 15)));
-    //
     // _location.changeSettings(
     //     accuracy: LocationAccuracy.balanced, interval: 1000, distanceFilter: 10);
 
     _location.onLocationChanged.listen((location) {
       // print('Location changed, requesting new image data.');
       // NetworkUtils.getImages();
-
       // context.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
       //     target: LatLng(currentLoc.latitude, currentLoc.longitude), zoom: 15)));
     });
   }
 
+  void _prepareGenerateMarkers(List<img.Image> images) async {
+    List<ImageProvider> imageProviderList = <ImageProvider>[];
+
+    if (images == null) {
+      // Something went wrong - server did not respond?
+      print('Server did not respond; cannot prepare to draw markers.');
+      return;
+    }
+
+    for (var image in images) {
+      imageProviderList.add(Image.memory(base64Decode(image.base64)).image);
+    }
+
+    List<Widget> circleAvatars = <Widget>[];
+
+    for (int i = 0; i < imageProviderList.length; i++) {
+      circleAvatars.add(CircleAvatar(backgroundImage: imageProviderList[i]));
+    }
+
+    var generator = MarkerGenerator(circleAvatars, _generateMarkers);
+
+    // If this widget is not active, don't draw anything.
+    if (mounted) {
+      print('Generating avatars.');
+      generator.generate(context);
+    } else {
+      print('Not generating avatars, widget not mounted.');
+    }
+  }
+
+  dynamic _generateMarkers(List<Uint8List> bitmapList) async {
+    print('Generating markers');
+
+    Map<MarkerId, Marker> markers = Map<MarkerId, Marker>();
+
+    for (var bitmap in bitmapList) {
+      var markerId = bitmap.hashCode.toString();
+      markers.addAll({
+        MarkerId(markerId): Marker(
+            markerId: MarkerId(bitmap.hashCode.toString()),
+            alpha: 0.75,
+            consumeTapEvents: false,
+            infoWindow: InfoWindow(title: 'marker info'),
+            position: LatLng(1, 2),
+            icon: BitmapDescriptor.fromBytes(bitmap))
+      });
+    }
+
+    setState(() {
+      for (var finishedMarkers in markers.entries) {
+        _markers[finishedMarkers.key] = finishedMarkers.value;
+      }
+    });
+
+    var ending = markers.length == 1 ? ' marker' : ' markers';
+    print('Added ' + markers.length.toString() + '$ending');
+  }
+
+  @deprecated
   void _createMarkerFromImage(img.Image image) async {
     MarkerId markerId = MarkerId(image.uuid);
 
     var imageFile = await ClientUtils.fromBase64(image.base64);
     var imageBytes = await imageFile.readAsBytes();
-
-    // TODO Shrink and frame the icon marker.
 
     Marker marker = Marker(
         markerId: markerId,
