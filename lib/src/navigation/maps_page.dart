@@ -73,8 +73,14 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
+  // FIXME Callback getting called only after hot-reload.
   void _prepareGenerateMarkers(List<img.Image> images) async {
     List<ImageProvider> imageProviderList = <ImageProvider>[];
+
+    if (!mounted) {
+      print('Aborting preparing to generate map markers.');
+      return;
+    }
 
     if (images == null) {
       // Something went wrong - server did not respond?
@@ -95,16 +101,12 @@ class _MapPageState extends State<MapPage> {
     var generator = MarkerGenerator(circleAvatars, _generateMarkers);
 
     // If this widget is not active, don't draw anything.
-    if (mounted) {
-      print('Generating avatars.');
       generator.generate(context);
-    } else {
-      print('Not generating avatars, widget not mounted.');
-    }
+    print('Generating avatars.');
   }
 
   dynamic _generateMarkers(List<Uint8List> bitmapList) async {
-    print('Generating markers');
+    print('Generating markers.');
 
     Map<MarkerId, Marker> markers = Map<MarkerId, Marker>();
 
