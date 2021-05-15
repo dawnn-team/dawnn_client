@@ -17,7 +17,7 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  final LatLng _center = const LatLng(45.521563, -122.677433);
+  final LatLng _center = const LatLng(1, 2);
   Location _location = Location();
 
   // To be used when creating markers - call back only returns
@@ -46,15 +46,15 @@ class _MapPageState extends State<MapPage> {
         body: GoogleMap(
           mapType: MapType.hybrid,
           onMapCreated: (GoogleMapController googleMapController) =>
-              {_onMapCreated(googleMapController, context)},
+          {_onMapCreated(googleMapController, context)},
           initialCameraPosition: CameraPosition(target: _center, zoom: 15),
           markers: Set.of(_markers.values),
         ));
   }
 
   /// Called when the map is created.
-  void _onMapCreated(
-      GoogleMapController googleMapController, BuildContext context) async {
+  void _onMapCreated(GoogleMapController googleMapController,
+      BuildContext context) async {
     print('Map loaded, requesting images.');
 
     _prepareGenerateMarkers(await NetworkUtils.requestImages());
@@ -77,6 +77,7 @@ class _MapPageState extends State<MapPage> {
   void _prepareGenerateMarkers(List<img.Image> images) async {
     List<ImageProvider> imageProviderList = <ImageProvider>[];
 
+    // Don't draw if not mounted.
     if (!mounted) {
       print('Aborting preparing to generate map markers.');
       return;
@@ -84,25 +85,26 @@ class _MapPageState extends State<MapPage> {
 
     if (images == null) {
       // Something went wrong - server did not respond?
-      print('Server did not respond; cannot prepare to draw markers.');
+      print('Server did not respond? Images are null, cannot prepare to draw markers.');
       return;
     }
 
     for (var image in images) {
-      imageProviderList.add(Image.memory(base64Decode(image.base64)).image);
+      imageProviderList.add(Image
+          .memory(base64Decode(image.base64))
+          .image);
     }
 
     List<Widget> circleAvatars = <Widget>[];
 
+    print('Generating avatars.');
     for (int i = 0; i < imageProviderList.length; i++) {
       circleAvatars.add(CircleAvatar(backgroundImage: imageProviderList[i]));
     }
 
     var generator = MarkerGenerator(circleAvatars, _generateMarkers);
 
-    // If this widget is not active, don't draw anything.
-      generator.generate(context);
-    print('Generating avatars.');
+    generator.generate(context);
   }
 
   dynamic _generateMarkers(List<Uint8List> bitmapList) async {
