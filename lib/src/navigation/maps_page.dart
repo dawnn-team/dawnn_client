@@ -104,6 +104,9 @@ class _MapPageState extends State<MapPage> {
 
     var generator = MarkerGenerator(circleAvatars, _generateMarkers);
 
+    setState(() {
+    });
+
     generator.generate(context);
   }
 
