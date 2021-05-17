@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 
 /// This just adds overlay and builds [_MarkerHelper] on that overlay.
 /// [_MarkerHelper] does all the heavy work of creating and getting bitmaps
@@ -16,8 +17,14 @@ class MarkerGenerator {
   MarkerGenerator(this.markerWidgets, this.callback);
 
   void generate(BuildContext context) {
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => afterFirstLayout(context));
+    // Code below from https://github.com/Jip1912
+    if (SchedulerBinding.instance.schedulerPhase ==
+        SchedulerPhase.persistentCallbacks) {
+      SchedulerBinding.instance
+          .addPostFrameCallback((_) => afterFirstLayout(context));
+    } else {
+      afterFirstLayout(context);
+    }
   }
 
   void afterFirstLayout(BuildContext context) {

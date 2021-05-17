@@ -1,9 +1,9 @@
 import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:dawnn_client/main.dart';
 import 'package:dawnn_client/src/network/objects/image.dart' as img;
-import 'package:dawnn_client/src/util/client_util.dart';
 import 'package:dawnn_client/src/util/generator.dart';
 import 'package:dawnn_client/src/util/network_util.dart';
 import 'package:flutter/cupertino.dart';
@@ -46,15 +46,15 @@ class _MapPageState extends State<MapPage> {
         body: GoogleMap(
           mapType: MapType.hybrid,
           onMapCreated: (GoogleMapController googleMapController) =>
-          {_onMapCreated(googleMapController, context)},
-          initialCameraPosition: CameraPosition(target: _center, zoom: 15),
+              {_onMapCreated(googleMapController, context)},
+          initialCameraPosition: CameraPosition(target: _center, zoom: 4),
           markers: Set.of(_markers.values),
         ));
   }
 
   /// Called when the map is created.
-  void _onMapCreated(GoogleMapController googleMapController,
-      BuildContext context) async {
+  void _onMapCreated(
+      GoogleMapController googleMapController, BuildContext context) async {
     print('Map loaded, requesting images.');
 
     _prepareGenerateMarkers(await NetworkUtils.requestImages());
@@ -73,7 +73,6 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
-  // FIXME Callback getting called only after hot-reload.
   void _prepareGenerateMarkers(List<img.Image> images) async {
     List<ImageProvider> imageProviderList = <ImageProvider>[];
 
@@ -85,27 +84,25 @@ class _MapPageState extends State<MapPage> {
 
     if (images == null) {
       // Something went wrong - server did not respond?
-      print('Server did not respond? Images are null, cannot prepare to draw markers.');
+      print(
+          'Server did not respond? Images are null, cannot prepare to draw markers.');
       return;
-    }
-
-    for (var image in images) {
-      imageProviderList.add(Image
-          .memory(base64Decode(image.base64))
-          .image);
     }
 
     List<Widget> circleAvatars = <Widget>[];
 
     print('Generating avatars.');
-    for (int i = 0; i < imageProviderList.length; i++) {
-      circleAvatars.add(CircleAvatar(backgroundImage: imageProviderList[i]));
+    for (var image in images) {
+      var loadedImage = Image.memory(base64Decode(image.base64));
+      circleAvatars.add(CircleAvatar(
+        backgroundImage: loadedImage.image,
+        radius: 7,
+      ));
     }
 
     var generator = MarkerGenerator(circleAvatars, _generateMarkers);
 
-    setState(() {
-    });
+    setState(() {});
 
     generator.generate(context);
   }
@@ -123,7 +120,8 @@ class _MapPageState extends State<MapPage> {
             alpha: 0.75,
             consumeTapEvents: false,
             infoWindow: InfoWindow(title: 'marker info'),
-            position: LatLng(1, 2),
+            position: LatLng(
+                Random().nextInt(5).toDouble(), Random().nextInt(5).toDouble()),
             icon: BitmapDescriptor.fromBytes(bitmap))
       });
     }
@@ -134,28 +132,7 @@ class _MapPageState extends State<MapPage> {
       }
     });
 
-    var ending = markers.length == 1 ? ' marker' : ' markers';
+    var ending = (markers.length == 1 ? ' marker' : ' markers') + '.';
     print('Added ' + markers.length.toString() + '$ending');
-  }
-
-  @deprecated
-  void _createMarkerFromImage(img.Image image) async {
-    MarkerId markerId = MarkerId(image.uuid);
-
-    var imageFile = await ClientUtils.fromBase64(image.base64);
-    var imageBytes = await imageFile.readAsBytes();
-
-    Marker marker = Marker(
-        markerId: markerId,
-        alpha: 0.75,
-        consumeTapEvents: false,
-        // Have custom image info window?
-        infoWindow: InfoWindow(title: image.caption),
-        position: LatLng(image.location.latitude, image.location.longitude),
-        icon: BitmapDescriptor.fromBytes(imageBytes));
-
-    setState(() {
-      _markers[markerId] = marker;
-    });
   }
 }
