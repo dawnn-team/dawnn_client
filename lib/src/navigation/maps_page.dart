@@ -74,8 +74,6 @@ class _MapPageState extends State<MapPage> {
   }
 
   void _prepareGenerateMarkers(List<img.Image> images) async {
-    List<ImageProvider> imageProviderList = <ImageProvider>[];
-
     // Don't draw if not mounted.
     if (!mounted) {
       print('Aborting preparing to generate map markers.');
@@ -101,8 +99,6 @@ class _MapPageState extends State<MapPage> {
     }
 
     var generator = MarkerGenerator(circleAvatars, _generateMarkers);
-
-    setState(() {});
 
     generator.generate(context);
   }
