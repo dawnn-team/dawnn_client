@@ -13,18 +13,17 @@ import '../network/objects/image.dart' as img;
 /// server communication.
 class NetworkUtils {
   /// Posts the image at [imagePath] to Dawnn server.
-  static void postImage(BuildContext context, String imagePath) async {
-    // FIXME This won't work correctly with captions - need to construct Image earlier.
+  static void postImage(
+      BuildContext context, String imagePath, String caption) async {
     print('Posting image.');
 
     User user =
         User(await ClientUtils.getLocation(), await ClientUtils.getHWID());
 
-    var data = img.Image(
+    var data = img.Image.emptyId(
         await ClientUtils.compressToBase64(File(imagePath)),
-        'Feature not yet implemented.',
-        user,
-        ''); // uuid is empty because server assigns it, not us.
+        caption,
+        user); // uuid is empty because server assigns it, not us.
 
     var body = json.encode(data.toJson());
 

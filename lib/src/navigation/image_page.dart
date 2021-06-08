@@ -17,10 +17,19 @@ class ImageScreen extends StatefulWidget {
 }
 
 class _ImageScreenState extends State<ImageScreen> {
-  final String imagePath;
-  final CameraController controller;
+  final String _imagePath;
+  final CameraController _controller;
+  TextEditingController _textEditingController;
+  String _caption = '';
+  bool _default = true;
 
-  _ImageScreenState(this.imagePath, this.controller);
+  _ImageScreenState(this._imagePath, this._controller);
+
+  @override
+  void initState() {
+    super.initState();
+    _textEditingController = TextEditingController(text: 'Add caption');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +38,33 @@ class _ImageScreenState extends State<ImageScreen> {
       body: Align(
           alignment: Alignment.center,
           child: ListView(children: [
-            Image.file(File(imagePath)),
+            Image.file(File(_imagePath)),
+            CupertinoTextField(
+                controller: _textEditingController,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                // TODO: Sanitize input here, and later on server?
+                onSubmitted: (String string) => {_caption = string},
+                onTap: _clearString),
             ElevatedButton(
-                onPressed: () => NetworkUtils.postImage(context, imagePath),
-                child: Text('Post image'))
+                onPressed: () => _evaluateCaption(), child: Text('Post image'))
           ])),
     );
+  }
+
+  void _clearString() {
+    if (_default) {
+      _textEditingController.clear();
+      _default = false;
+    }
+  }
+
+  void _evaluateCaption() {
+    if (_caption == '') {
+      // TODO: Show alert
+      print(
+          'Are you sure about sending no caption? Captions can be useful by providing context '
+          'or other relating information');
+    }
+    NetworkUtils.postImage(context, _imagePath, _caption);
   }
 }

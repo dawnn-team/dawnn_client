@@ -10,6 +10,7 @@ part 'image.g.dart';
 @JsonSerializable(explicitToJson: true)
 class Image {
   Image(this.base64, this.caption, this.user, this.uuid);
+  Image.emptyId(this.base64, this.caption, this.user);
 
   // Match server design to re-use one object
 
