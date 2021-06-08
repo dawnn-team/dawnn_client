@@ -13,16 +13,17 @@ import '../network/objects/image.dart' as img;
 /// server communication.
 class NetworkUtils {
   /// Posts the image at [imagePath] to Dawnn server.
-  static Future<int> postImage(BuildContext context, String imagePath) async {
+  static void postImage(BuildContext context, String imagePath) async {
     // FIXME This won't work correctly with captions - need to construct Image earlier.
-    await sendClientUpdate();
     print('Posting image.');
+
+    User user =
+        User(await ClientUtils.getLocation(), await ClientUtils.getHWID());
 
     var data = img.Image(
         await ClientUtils.compressToBase64(File(imagePath)),
         'Feature not yet implemented.',
-        await ClientUtils.getLocation(),
-        await ClientUtils.getHWID(),
+        user,
         ''); // uuid is empty because server assigns it, not us.
 
     var body = json.encode(data.toJson());
@@ -47,21 +48,18 @@ class NetworkUtils {
     } catch (e) {
       // Probably timed out.
       print(e);
-      ClientUtils.displayResponse(
-          context, -1, null, 'Post failed. No internet?');
-      return null;
+      ClientUtils.displayResponse(context, -1, '', 'Post failed. No internet?');
+      return;
     }
 
     ClientUtils.displayResponse(
-        context, response.statusCode, 'Success! Image has been posted.', null);
+        context, response.statusCode, 'Success! Image has been posted.', '');
 
     // TODO Fix calling ClintUtils.displayResponse from NetworkUtils.
 
     client.close();
 
     print('Posted image.');
-    // Return code is useless right now...
-    return response.statusCode;
   }
 
   /// Get images near our location in a list. Calls sendLocationUpdate()
@@ -75,21 +73,15 @@ class NetworkUtils {
         User(await ClientUtils.getLocation(), await ClientUtils.getHWID());
 
     // Use POST instead of GET with body.
-    var response;
-    try {
-      response = await client.post(
-          Uri(
-            scheme: 'http',
-            path: '/api/v1/image/request',
-            host: '10.0.2.2',
-            port: 2423,
-          ),
-          body: json.encode(user.toJson()),
-          headers: {'Content-type': 'application/json'});
-    } catch (exception) {
-      print(exception);
-      return null;
-    }
+    var response = await client.post(
+        Uri(
+          scheme: 'http',
+          path: '/api/v1/image/request',
+          host: '10.0.2.2',
+          port: 2423,
+        ),
+        body: json.encode(user.toJson()),
+        headers: {'Content-type': 'application/json'});
 
     List<img.Image> images = (json.decode(response.body) as List)
         .map((i) => img.Image.fromMap(i))

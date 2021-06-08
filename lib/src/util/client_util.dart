@@ -38,7 +38,7 @@ class ClientUtils {
       return sha256.convert(androidDeviceInfo.androidId.codeUnits).toString();
     } else {
       // This shouldn't be possible, but we'll handle it anyway.
-      return null;
+      return throw UnsupportedError('This platform is not supported!');
     }
   }
 

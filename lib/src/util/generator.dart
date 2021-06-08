@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:dawnn_client/src/network/objects/image.dart' as img;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
@@ -11,10 +12,13 @@ import 'package:flutter/scheduler.dart';
 /// This class is created by https://github.com/itsJoKr
 /// A little cleanup was done by mhmyesman.
 class MarkerGenerator {
-  final Function(List<Uint8List>) callback;
-  final List<Widget> markerWidgets;
+  final Function(List<Uint8List>, List<img.Image>) callback;
 
-  MarkerGenerator(this.markerWidgets, this.callback);
+  // We get the bitmaps from this list.
+  final List<Widget> markerWidgets;
+  final List<img.Image> images;
+
+  MarkerGenerator(this.markerWidgets, this.callback, this.images);
 
   void generate(BuildContext context) {
     // Code below from https://github.com/Jip1912
@@ -46,6 +50,7 @@ class MarkerGenerator {
           return _MarkerHelper(
             markerWidgets: markerWidgets,
             callback: callback,
+            images: images,
           );
         },
         maintainState: true);
@@ -67,22 +72,30 @@ class MarkerGenerator {
 /// 3) Returns set of Uint8List (bitmaps) through callback
 class _MarkerHelper extends StatefulWidget {
   final List<Widget> markerWidgets;
-  final Function(List<Uint8List>) callback;
+  final Function(List<Uint8List>, List<img.Image>) callback;
+  final List<img.Image> images;
 
-  const _MarkerHelper({Key key, this.markerWidgets, this.callback})
+  const _MarkerHelper(
+      {Key key,
+       this.markerWidgets,
+       this.callback,
+       this.images})
       : super(key: key);
 
   @override
-  _MarkerHelperState createState() => _MarkerHelperState();
+  _MarkerHelperState createState() => _MarkerHelperState(images);
 }
 
 class _MarkerHelperState extends State<_MarkerHelper> with AfterLayoutMixin {
   List<GlobalKey> globalKeys = <GlobalKey>[];
+  List<img.Image> images;
+
+  _MarkerHelperState(this.images);
 
   @override
   void afterFirstLayout(BuildContext context) {
     _getBitmaps(context).then((list) {
-      widget.callback(list);
+      widget.callback(list, images);
     });
   }
 

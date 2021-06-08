@@ -20,8 +20,6 @@ class DawnnClient extends StatefulWidget {
 
   const DawnnClient({Key key, this.camera}) : super(key: key);
 
-  static State<MapPage> mapPage;
-
   @override
   _DawnnClientState createState() => _DawnnClientState(camera);
 }
@@ -30,10 +28,6 @@ class _DawnnClientState extends State<DawnnClient> {
   final CameraDescription camera;
 
   _DawnnClientState(this.camera);
-
-  // Needs to be null safe.
-  // Might have to rewrite this.
-  static State<MapPage> page = DawnnClient.mapPage;
 
   @override
   Widget build(BuildContext context) {

@@ -8,16 +8,16 @@ part 'user.g.dart';
 /// update to.
 @JsonSerializable(explicitToJson: true)
 class User {
-  User(this._location, this._hwid);
+  User(this.location, this.hwid);
 
-  Location _location;
-  String _hwid;
-
-  Location get location => _location;
-
-  String get hwid => _hwid;
+  Location location;
+  String hwid;
 
   factory User.fromMap(Map<String, dynamic> json) => _$UserFromJson(json);
+
+  User.fromJson(Map<String, dynamic> json)
+      : location = json['location'],
+        hwid = json['hwid'];
 
   Map<String, dynamic> toJson() => _$UserToJson(this);
 }

@@ -57,8 +57,7 @@ class _CameraPageState extends State<CameraPage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          ImageScreen(
+                      builder: (context) => ImageScreen(
                             image.path,
                             _controller,
                           )));

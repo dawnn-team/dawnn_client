@@ -1,10 +1,5 @@
-import 'dart:convert';
-import 'dart:math';
-import 'dart:typed_data';
-
 import 'package:dawnn_client/main.dart';
 import 'package:dawnn_client/src/network/objects/image.dart' as img;
-import 'package:dawnn_client/src/util/generator.dart';
 import 'package:dawnn_client/src/util/network_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +20,7 @@ class _MapPageState extends State<MapPage> {
   List<img.Image> imageData = <img.Image>[];
 
   _MapPageState() {
-    DawnnClient.mapPage = this;
+    // DawnnClient.mapPage = this;
   }
 
   Map<MarkerId, Marker> _markers = <MarkerId, Marker>{};
@@ -80,45 +75,25 @@ class _MapPageState extends State<MapPage> {
       return;
     }
 
-    if (images == null) {
-      // Something went wrong - server did not respond?
-      print(
-          'Server did not respond? Images are null, cannot prepare to draw markers.');
-      return;
-    }
-
-    List<Widget> circleAvatars = <Widget>[];
-
-    print('Generating avatars.');
-    for (var image in images) {
-      var loadedImage = Image.memory(base64Decode(image.base64));
-      circleAvatars.add(CircleAvatar(
-        backgroundImage: loadedImage.image,
-        radius: 7,
-      ));
-    }
-
-    var generator = MarkerGenerator(circleAvatars, _generateMarkers);
-
-    generator.generate(context);
+    _generateMarkers(images);
   }
 
-  dynamic _generateMarkers(List<Uint8List> bitmapList) async {
+  dynamic _generateMarkers(List<img.Image> images) async {
     print('Generating markers.');
 
     Map<MarkerId, Marker> markers = Map<MarkerId, Marker>();
 
-    for (var bitmap in bitmapList) {
-      var markerId = bitmap.hashCode.toString();
+    for (img.Image image in images) {
+      var id = MarkerId(image.uuid);
       markers.addAll({
-        MarkerId(markerId): Marker(
-            markerId: MarkerId(bitmap.hashCode.toString()),
+        id: Marker(
+            markerId: id,
             alpha: 0.75,
             consumeTapEvents: false,
-            infoWindow: InfoWindow(title: 'marker info'),
+            infoWindow: InfoWindow(title: image.caption),
             position: LatLng(
-                Random().nextInt(5).toDouble(), Random().nextInt(5).toDouble()),
-            icon: BitmapDescriptor.fromBytes(bitmap))
+                image.user.location.latitude, image.user.location.longitude),
+            icon: BitmapDescriptor.defaultMarker)
       });
     }
 
