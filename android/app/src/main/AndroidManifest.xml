@@ -14,7 +14,6 @@
             android:icon="@mipmap/ic_launcher">
 
         <!-- Android Maps API Key -->
-        <!--> TODO Load this from dawn_server -->
         <meta-data android:name="com.google.android.geo.API_KEY"
                    android:value="
         "/>

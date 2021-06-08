@@ -1,10 +1,11 @@
-import 'package:dawnn_client/main.dart';
 import 'package:dawnn_client/src/network/objects/image.dart' as img;
 import 'package:dawnn_client/src/util/network_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+
+import 'image_viewer_page.dart';
 
 class MapPage extends StatefulWidget {
   @override
@@ -89,7 +90,8 @@ class _MapPageState extends State<MapPage> {
         id: Marker(
             markerId: id,
             alpha: 0.75,
-            consumeTapEvents: false,
+            onTap: () => viewImage(image),
+            consumeTapEvents: true,
             infoWindow: InfoWindow(title: image.caption),
             position: LatLng(
                 image.user.location.latitude, image.user.location.longitude),
@@ -105,5 +107,10 @@ class _MapPageState extends State<MapPage> {
 
     var ending = (markers.length == 1 ? ' marker' : ' markers') + '.';
     print('Added ' + markers.length.toString() + '$ending');
+  }
+
+  void viewImage(img.Image image) {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => ImageViewer(image)));
   }
 }
