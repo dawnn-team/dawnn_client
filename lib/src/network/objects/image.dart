@@ -18,9 +18,6 @@ class Image {
   User user;
   String uuid;
 
-  String hwid;
-
-
   factory Image.fromMap(Map<String, dynamic> json) => _$ImageFromJson(json);
 
   Map<String, dynamic> toJson() => _$ImageToJson(this);

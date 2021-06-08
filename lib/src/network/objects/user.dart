@@ -15,9 +15,5 @@ class User {
 
   factory User.fromMap(Map<String, dynamic> json) => _$UserFromJson(json);
 
-  User.fromJson(Map<String, dynamic> json)
-      : location = json['location'],
-        hwid = json['hwid'];
-
   Map<String, dynamic> toJson() => _$UserToJson(this);
 }

@@ -8,12 +8,14 @@ part of 'user.dart';
 
 User _$UserFromJson(Map<String, dynamic> json) {
   return User(
-    Location.fromJson(json['location'] as Map<String, dynamic>),
+    json['location'] == null
+        ? null
+        : Location.fromJson(json['location'] as Map<String, dynamic>),
     json['hwid'] as String,
   );
 }
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
-      'location': instance.location.toJson(),
+      'location': instance.location?.toJson(),
       'hwid': instance.hwid,
     };
