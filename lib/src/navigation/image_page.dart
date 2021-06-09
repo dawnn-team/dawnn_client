@@ -1,29 +1,28 @@
 import 'dart:io';
 
-import 'package:camera/camera.dart';
 import 'package:dawnn_client/src/util/network_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class ImageScreen extends StatefulWidget {
+/// Display the fresh user image, optionally add a caption.
+///
+/// On post calls [NetworkUtils.postImage].
+class ImagePage extends StatefulWidget {
   final imagePath;
-  final controller;
 
-  ImageScreen(this.imagePath, this.controller);
+  ImagePage(this.imagePath);
 
   @override
-  State<StatefulWidget> createState() =>
-      _ImageScreenState(imagePath, controller);
+  State<StatefulWidget> createState() => _ImagePageState(imagePath);
 }
 
-class _ImageScreenState extends State<ImageScreen> {
+class _ImagePageState extends State<ImagePage> {
   final String _imagePath;
-  final CameraController _controller;
   TextEditingController _textEditingController;
   String _caption = '';
   bool _default = true;
 
-  _ImageScreenState(this._imagePath, this._controller);
+  _ImagePageState(this._imagePath);
 
   @override
   void initState() {
@@ -46,7 +45,7 @@ class _ImageScreenState extends State<ImageScreen> {
                 onSubmitted: (String string) => {_caption = string},
                 onTap: _clearString),
             ElevatedButton(
-                onPressed: () => _evaluateCaption(), child: Text('Post image'))
+                onPressed: () => _evaluateAndWarn(), child: Text('Post image'))
           ])),
     );
   }
@@ -58,9 +57,9 @@ class _ImageScreenState extends State<ImageScreen> {
     }
   }
 
-  void _evaluateCaption() {
+  void _evaluateAndWarn() {
     if (_caption == '') {
-      // TODO: Show alert
+      // TODO: Show warning
       print(
           'Are you sure about sending no caption? Captions can be useful by providing context '
           'or other relating information');

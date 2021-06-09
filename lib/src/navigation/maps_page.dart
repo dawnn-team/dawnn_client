@@ -7,30 +7,21 @@ import 'package:location/location.dart';
 
 import 'image_viewer_page.dart';
 
+/// A page displaying Google Maps with alerts on it.
+///
+/// Google Maps loads first, after which it goes through a pipeline
+/// ending in a call to [NetworkUtils.requestImages].
 class MapPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _MapPageState();
 }
 
 class _MapPageState extends State<MapPage> {
+  // TODO: Start camera at user location
   final LatLng _center = const LatLng(1, 2);
   Location _location = Location();
 
-  // To be used when creating markers - call back only returns
-  // bitmap data, not captions, uuid, or location.
-  List<img.Image> imageData = <img.Image>[];
-
-  _MapPageState() {
-    // DawnnClient.mapPage = this;
-  }
-
   Map<MarkerId, Marker> _markers = <MarkerId, Marker>{};
-
-  @override
-  void dispose() {
-    super.dispose();
-    imageData.clear();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +70,7 @@ class _MapPageState extends State<MapPage> {
     _generateMarkers(images);
   }
 
-  dynamic _generateMarkers(List<img.Image> images) async {
+  void _generateMarkers(List<img.Image> images) async {
     print('Generating markers.');
 
     Map<MarkerId, Marker> markers = Map<MarkerId, Marker>();
@@ -111,6 +102,6 @@ class _MapPageState extends State<MapPage> {
 
   void viewImage(img.Image image) {
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => ImageViewer(image)));
+        MaterialPageRoute(builder: (context) => ImageViewerPage(image)));
   }
 }

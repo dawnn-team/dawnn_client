@@ -1,6 +1,5 @@
 import 'package:camera/camera.dart';
 import 'package:dawnn_client/src/navigation/home_page.dart';
-import 'package:dawnn_client/src/navigation/maps_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 

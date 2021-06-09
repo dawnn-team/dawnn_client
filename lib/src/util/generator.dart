@@ -11,6 +11,7 @@ import 'package:flutter/scheduler.dart';
 ///
 /// This class is created by https://github.com/itsJoKr
 /// A little cleanup was done by mhmyesman.
+@deprecated
 class MarkerGenerator {
   final Function(List<Uint8List>, List<img.Image>) callback;
 
@@ -75,11 +76,7 @@ class _MarkerHelper extends StatefulWidget {
   final Function(List<Uint8List>, List<img.Image>) callback;
   final List<img.Image> images;
 
-  const _MarkerHelper(
-      {Key key,
-       this.markerWidgets,
-       this.callback,
-       this.images})
+  const _MarkerHelper({Key key, this.markerWidgets, this.callback, this.images})
       : super(key: key);
 
   @override

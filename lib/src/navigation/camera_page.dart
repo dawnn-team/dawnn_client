@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 
 import 'image_page.dart';
 
+/// Page that displays a camera.
+///
+/// When users take the image, this pushes to [ImagePage].
 class CameraPage extends StatefulWidget {
   final CameraDescription camera;
 
@@ -53,9 +56,8 @@ class _CameraPageState extends State<CameraPage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ImageScreen(
+                      builder: (context) => ImagePage(
                             image.path,
-                            _controller,
                           )));
             } catch (exception) {
               print(exception);

@@ -9,23 +9,24 @@ import 'package:http/http.dart' as http;
 
 import '../network/objects/image.dart' as img;
 
-/// This is a utility class concerning
-/// server communication.
+/// Utility class concerning network related actions.
 class NetworkUtils {
-  /// Posts the image at [imagePath] to Dawnn server.
+  /// Constructs an [img.Image] and posts it to the server.
+  ///
+  /// Using provided image at [imagePath] and user
+  /// submitted [caption], this method constructs an [img.Image] along with a [User],
+  /// which it then posts to the Dawnn server.
   static void postImage(
       BuildContext context, String imagePath, String caption) async {
-    print('Posting image.');
+    print('Building image and user.');
 
     User user =
         User(await ClientUtils.getLocation(), await ClientUtils.getHWID());
 
-    var data = img.Image.emptyId(
-        await ClientUtils.compressToBase64(File(imagePath)),
-        caption,
-        user); // uuid is empty because server assigns it, not us.
+    var image = img.Image.emptyId(
+        await ClientUtils.compressToBase64(File(imagePath)), caption, user);
 
-    var body = json.encode(data.toJson());
+    var body = json.encode(image.toJson());
 
     http.Response response;
 
@@ -61,26 +62,30 @@ class NetworkUtils {
     print('Posted image.');
   }
 
-  /// Get images near our location in a list. Calls sendLocationUpdate()
-  /// In order to receive the data most relevant to our location.
+  /// Request images near our location in a list.
   static Future<List<img.Image>> requestImages() async {
     print('Requesting images.');
-    sendClientUpdate();
+
     var client = http.Client();
 
     var user =
         User(await ClientUtils.getLocation(), await ClientUtils.getHWID());
 
     // Use POST instead of GET with body.
-    var response = await client.post(
-        Uri(
-          scheme: 'http',
-          path: '/api/v1/image/request',
-          host: '10.0.2.2',
-          port: 2423,
-        ),
-        body: json.encode(user.toJson()),
-        headers: {'Content-type': 'application/json'});
+    var response;
+    try {
+      response = await client.post(
+          Uri(
+            scheme: 'http',
+            path: '/api/v1/image/request',
+            host: '10.0.2.2',
+            port: 2423,
+          ),
+          body: json.encode(user.toJson()),
+          headers: {'Content-type': 'application/json'});
+    } catch (exception) {
+      print(exception);
+    }
 
     List<img.Image> images = (json.decode(response.body) as List)
         .map((i) => img.Image.fromMap(i))
@@ -93,8 +98,12 @@ class NetworkUtils {
   }
 
   /// Send a client update to the server.
+  ///
+  /// Constructs a [User] and sends to server. Should only be used when requesting
+  /// images for [MapsPage]. Currently deprecated because all server endpoints
+  /// explicitly require a full user object, making this obsolete.
+  @deprecated
   static Future<void> sendClientUpdate() async {
-    // TODO Optimize update frequency.
     print('Sending client update.');
     var client = http.Client();
 
