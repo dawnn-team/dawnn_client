@@ -2,6 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 
+/// A page for the user to edit the settings.
+///
+/// Currently desolate, but in the future there will be options regarding
+/// security, among others.
 class SettingsPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _SettingsPageState();

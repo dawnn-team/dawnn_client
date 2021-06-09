@@ -3,19 +3,17 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'user.g.dart';
 
-/// This class represents us, the user. Used to update location server-side.
-/// The server needs our location to be updated, as well as our hwid to assign the
-/// update to.
+/// Represents the user.
+///
+/// This object is used in client updates and image posts.
+/// A user consists of a [hwid] and a [location].
 @JsonSerializable(explicitToJson: true)
 class User {
-  User(this._location, this._hwid);
+  /// Create a user at this [location] and [hwid].
+  User(this.location, this.hwid);
 
-  Location _location;
-  String _hwid;
-
-  Location get location => _location;
-
-  String get hwid => _hwid;
+  Location location;
+  String hwid;
 
   factory User.fromMap(Map<String, dynamic> json) => _$UserFromJson(json);
 

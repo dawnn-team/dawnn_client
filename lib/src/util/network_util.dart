@@ -9,23 +9,24 @@ import 'package:http/http.dart' as http;
 
 import '../network/objects/image.dart' as img;
 
-/// This is a utility class concerning
-/// server communication.
+/// Utility class concerning network related actions.
 class NetworkUtils {
-  /// Posts the image at [imagePath] to Dawnn server.
-  static Future<int> postImage(BuildContext context, String imagePath) async {
-    // FIXME This won't work correctly with captions - need to construct Image earlier.
-    await sendClientUpdate();
-    print('Posting image.');
+  /// Constructs an [img.Image] and posts it to the server.
+  ///
+  /// Using provided image at [imagePath] and user
+  /// submitted [caption], this method constructs an [img.Image] along with a [User],
+  /// which it then posts to the Dawnn server.
+  static void postImage(
+      BuildContext context, String imagePath, String caption) async {
+    print('Building image and user.');
 
-    var data = img.Image(
-        await ClientUtils.compressToBase64(File(imagePath)),
-        'Feature not yet implemented.',
-        await ClientUtils.getLocation(),
-        await ClientUtils.getHWID(),
-        ''); // uuid is empty because server assigns it, not us.
+    User user =
+        User(await ClientUtils.getLocation(), await ClientUtils.getHWID());
 
-    var body = json.encode(data.toJson());
+    var image = img.Image.emptyId(
+        await ClientUtils.compressToBase64(File(imagePath)), caption, user);
+
+    var body = json.encode(image.toJson());
 
     http.Response response;
 
@@ -47,28 +48,24 @@ class NetworkUtils {
     } catch (e) {
       // Probably timed out.
       print(e);
-      ClientUtils.displayResponse(
-          context, -1, null, 'Post failed. No internet?');
-      return null;
+      ClientUtils.displayResponse(context, -1, '', 'Post failed. No internet?');
+      return;
     }
 
     ClientUtils.displayResponse(
-        context, response.statusCode, 'Success! Image has been posted.', null);
+        context, response.statusCode, 'Success! Image has been posted.', '');
 
     // TODO Fix calling ClintUtils.displayResponse from NetworkUtils.
 
     client.close();
 
     print('Posted image.');
-    // Return code is useless right now...
-    return response.statusCode;
   }
 
-  /// Get images near our location in a list. Calls sendLocationUpdate()
-  /// In order to receive the data most relevant to our location.
+  /// Request images near our location in a list.
   static Future<List<img.Image>> requestImages() async {
     print('Requesting images.');
-    sendClientUpdate();
+
     var client = http.Client();
 
     var user =
@@ -88,7 +85,6 @@ class NetworkUtils {
           headers: {'Content-type': 'application/json'});
     } catch (exception) {
       print(exception);
-      return null;
     }
 
     List<img.Image> images = (json.decode(response.body) as List)
@@ -102,8 +98,12 @@ class NetworkUtils {
   }
 
   /// Send a client update to the server.
+  ///
+  /// Constructs a [User] and sends to server. Should only be used when requesting
+  /// images for [MapsPage]. Currently deprecated because all server endpoints
+  /// explicitly require a full user object, making this obsolete.
+  @deprecated
   static Future<void> sendClientUpdate() async {
-    // TODO Optimize update frequency.
     print('Sending client update.');
     var client = http.Client();
 

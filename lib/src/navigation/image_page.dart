@@ -1,26 +1,34 @@
 import 'dart:io';
 
-import 'package:camera/camera.dart';
 import 'package:dawnn_client/src/util/network_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class ImageScreen extends StatefulWidget {
+/// Display the fresh user image, optionally add a caption.
+///
+/// On post calls [NetworkUtils.postImage].
+class ImagePage extends StatefulWidget {
   final imagePath;
-  final controller;
 
-  ImageScreen(this.imagePath, this.controller);
+  ImagePage(this.imagePath);
 
   @override
-  State<StatefulWidget> createState() =>
-      _ImageScreenState(imagePath, controller);
+  State<StatefulWidget> createState() => _ImagePageState(imagePath);
 }
 
-class _ImageScreenState extends State<ImageScreen> {
-  final String imagePath;
-  final CameraController controller;
+class _ImagePageState extends State<ImagePage> {
+  final String _imagePath;
+  TextEditingController _textEditingController;
+  String _caption = '';
+  bool _default = true;
 
-  _ImageScreenState(this.imagePath, this.controller);
+  _ImagePageState(this._imagePath);
+
+  @override
+  void initState() {
+    super.initState();
+    _textEditingController = TextEditingController(text: 'Add caption');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +37,33 @@ class _ImageScreenState extends State<ImageScreen> {
       body: Align(
           alignment: Alignment.center,
           child: ListView(children: [
-            Image.file(File(imagePath)),
+            Image.file(File(_imagePath)),
+            CupertinoTextField(
+                controller: _textEditingController,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                // TODO: Sanitize input here, and later on server?
+                onSubmitted: (String string) => {_caption = string},
+                onTap: _clearString),
             ElevatedButton(
-                onPressed: () => NetworkUtils.postImage(context, imagePath),
-                child: Text('Post image'))
+                onPressed: () => _evaluateAndWarn(), child: Text('Post image'))
           ])),
     );
+  }
+
+  void _clearString() {
+    if (_default) {
+      _textEditingController.clear();
+      _default = false;
+    }
+  }
+
+  void _evaluateAndWarn() {
+    if (_caption == '') {
+      // TODO: Show warning
+      print(
+          'Are you sure about sending no caption? Captions can be useful by providing context '
+          'or other relating information');
+    }
+    NetworkUtils.postImage(context, _imagePath, _caption);
   }
 }

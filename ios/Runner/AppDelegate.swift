@@ -11,7 +11,6 @@ import GoogleMaps
     GeneratedPluginRegistrant.register(with: self)
 
     // iOS Maps API Key
-    // TODO Load this from dawn_server
     GMSServices.provideAPIKey("""
     """)
 

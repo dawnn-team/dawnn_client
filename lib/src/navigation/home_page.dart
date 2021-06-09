@@ -5,6 +5,10 @@ import 'package:dawnn_client/src/navigation/settings_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+/// Base navigation page.
+///
+/// Responsible for navigating between [CameraPage], [MapPage], and [SettingPage]
+/// Uses an array in order to switch between pages.
 class HomePage extends StatefulWidget {
   final camera;
 
@@ -18,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   _HomePageState(_camera)
       : _children = [CameraPage(_camera), MapPage(), SettingsPage()];
 
-  // Set to 1 straight away to load 'home' page.
+  // Index 1 loads maps page.
   int _currentIndex = 1;
 
   final _barItems = [
@@ -37,9 +41,7 @@ class _HomePageState extends State<HomePage> {
         items: _barItems,
         initialActiveIndex: 1,
         onTap: onTap,
-        backgroundColor: Theme
-            .of(context)
-            .primaryColor,
+        backgroundColor: Theme.of(context).primaryColor,
       ),
     );
   }

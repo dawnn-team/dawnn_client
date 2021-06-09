@@ -12,8 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
-/// This is a utility class concerning client related actions,
-/// such as getting location or HWID.
+/// Utility class concerning client related actions.
 class ClientUtils {
   static var _location = Location();
 
@@ -23,8 +22,10 @@ class ClientUtils {
     return loc.Location(locationData.latitude, locationData.longitude);
   }
 
-  /// Get the HWID of this device. Used as a parameter
-  /// for the json http post request.
+  /// Get the HWID of this device.
+  ///
+  /// Used as a parameter for the json http post request.
+  /// Throws [UnsupportedError] if the platform is not supported.
   static Future<String> getHWID() async {
     var deviceInfo = DeviceInfoPlugin();
 
@@ -38,13 +39,17 @@ class ClientUtils {
       return sha256.convert(androidDeviceInfo.androidId.codeUnits).toString();
     } else {
       // This shouldn't be possible, but we'll handle it anyway.
-      return null;
+      return throw UnsupportedError('This platform is not supported!');
     }
   }
 
-  /// Compress an image [file] to 95% of its original quality,
-  /// correct angle, remove EXIF metadata, and convert
-  /// to the base64 format.
+  /// Compress an image to 95%, correct angle, clean metadata, and convert
+  /// to base64.
+  ///
+  /// Compresses an image at [file] to 95% of its original quality,
+  /// corrects the rotation angle, removes EXIF metadata, and converts
+  /// the image to base64. Performs the above operations on a temporary
+  /// image file, then reads the image back as base64.
   static Future<String> compressToBase64(File file) async {
     var dir = await getTemporaryDirectory();
     var targetPath = dir.absolute.path + "/temp.jpg";
@@ -56,8 +61,9 @@ class ClientUtils {
   }
 
   /// Decode a base64 image [source] to a file.
-  /// To be used whenever we implement
-  /// getting images from dawn server.
+  ///
+  /// Not currently used?
+  @deprecated
   static Future<File> fromBase64(String source) async {
     var dir = await getTemporaryDirectory();
     var bytes = base64.decode(source);
@@ -66,10 +72,13 @@ class ClientUtils {
     return file;
   }
 
-  /// Display information to a user regarding an http response [responseCode],
-  /// showing either [successText] or [failText].
+  /// Display information to a user about an http response.
+  ///
+  /// Based on the provided [responseCode], this will show
+  /// either [successText] or [failText].
   /// [failText] is predetermined for status code 400.
-  /// To fail right away, [responseCode] should be -1.
+  /// To cause a failure disregarding [responseCode],
+  /// [responseCode] should be -1.
   static void displayResponse(BuildContext context, int responseCode,
       String successText, String failText) {
     String message;
