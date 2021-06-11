@@ -16,7 +16,7 @@ class NetworkUtils {
   /// Using provided image at [imagePath] and user
   /// submitted [caption], this method constructs an [img.Image] along with a [User],
   /// which it then posts to the Dawnn server.
-  static void postImage(
+  static Future<int> postImage(
       BuildContext context, String imagePath, String caption) async {
     print('Building image and user.');
 
@@ -48,18 +48,13 @@ class NetworkUtils {
     } catch (e) {
       // Probably timed out.
       print(e);
-      ClientUtils.displayResponse(context, -1, '', 'Post failed. No internet?');
-      return;
+      return -1;
     }
-
-    ClientUtils.displayResponse(
-        context, response.statusCode, 'Success! Image has been posted.', '');
-
-    // TODO Fix calling ClintUtils.displayResponse from NetworkUtils.
 
     client.close();
 
     print('Posted image.');
+    return response.statusCode;
   }
 
   /// Request images near our location in a list.
@@ -87,9 +82,17 @@ class NetworkUtils {
       print(exception);
     }
 
-    List<img.Image> images = (json.decode(response.body) as List)
-        .map((i) => img.Image.fromMap(i))
-        .toList();
+    List<img.Image> images;
+
+    try {
+      images = (json.decode(response.body) as List)
+          .map((i) => img.Image.fromMap(i))
+          .toList();
+    } catch (exception) {
+      // Body was null
+      print('Response was empty.');
+      return null;
+    }
 
     client.close();
 

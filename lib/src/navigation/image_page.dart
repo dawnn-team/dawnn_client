@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dawnn_client/src/util/client_util.dart';
 import 'package:dawnn_client/src/util/network_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -65,5 +66,9 @@ class _ImagePageState extends State<ImagePage> {
           'or other relating information');
     }
     NetworkUtils.postImage(context, _imagePath, _caption);
+
+    int reply = await NetworkUtils.postImage(context, _imagePath, _caption);
+    ClientUtils.displayResponse(context, reply,
+        'Success! Image has been posted.', 'Post failed. No internet?');
   }
 }
