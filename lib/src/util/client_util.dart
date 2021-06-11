@@ -60,18 +60,6 @@ class ClientUtils {
     return base64Encode(bytes);
   }
 
-  /// Decode a base64 image [source] to a file.
-  ///
-  /// Not currently used?
-  @deprecated
-  static Future<File> fromBase64(String source) async {
-    var dir = await getTemporaryDirectory();
-    var bytes = base64.decode(source);
-    var file = File(dir.absolute.path + '/newImage.jpg');
-    file.writeAsBytesSync(bytes);
-    return file;
-  }
-
   /// Display information to a user about an http response.
   ///
   /// Based on the provided [responseCode], this will show
