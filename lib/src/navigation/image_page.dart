@@ -58,14 +58,13 @@ class _ImagePageState extends State<ImagePage> {
     }
   }
 
-  void _evaluateAndWarn() {
+  void _evaluateAndWarn(BuildContext context) async {
     if (_caption == '') {
       // TODO: Show warning
       print(
           'Are you sure about sending no caption? Captions can be useful by providing context '
           'or other relating information');
     }
-    NetworkUtils.postImage(context, _imagePath, _caption);
 
     int reply = await NetworkUtils.postImage(context, _imagePath, _caption);
     ClientUtils.displayResponse(context, reply,
