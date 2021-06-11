@@ -46,7 +46,7 @@ class _ImagePageState extends State<ImagePage> {
                 onSubmitted: (String string) => {_caption = string},
                 onTap: _clearString),
             ElevatedButton(
-                onPressed: () => _evaluateAndWarn(), child: Text('Post image'))
+                onPressed: () => _evaluateAndWarn(context), child: Text('Post image'))
           ])),
     );
   }
