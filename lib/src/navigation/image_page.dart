@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dawnn_client/src/util/client_util.dart';
 import 'package:dawnn_client/src/util/network_util.dart';
+import 'package:flash/flash.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +23,7 @@ class _ImagePageState extends State<ImagePage> {
   TextEditingController _textEditingController;
   String _caption = '';
   bool _default = true;
+  bool _warned = false;
 
   _ImagePageState(this._imagePath);
 
@@ -46,7 +48,8 @@ class _ImagePageState extends State<ImagePage> {
                 onSubmitted: (String string) => {_caption = string},
                 onTap: _clearString),
             ElevatedButton(
-                onPressed: () => _evaluateAndWarn(context), child: Text('Post image'))
+                onPressed: () => _evaluateAndWarn(),
+                child: Text('Post image'))
           ])),
     );
   }
@@ -58,12 +61,15 @@ class _ImagePageState extends State<ImagePage> {
     }
   }
 
-  void _evaluateAndWarn(BuildContext context) async {
-    if (_caption == '') {
-      // TODO: Show warning
-      print(
-          'Are you sure about sending no caption? Captions can be useful by providing context '
-          'or other relating information');
+  void _evaluateAndWarn() async {
+    if (_caption == '' && !_warned) {
+      context.showFlashDialog(
+          content: Text(
+              'Consider adding a caption - it can provide information not visible in the photo.'),
+          borderColor: Color.fromRGBO(255, 0, 0, 100),
+          borderWidth: 3);
+      _warned = true;
+      return;
     }
 
     int reply = await NetworkUtils.postImage(context, _imagePath, _caption);
