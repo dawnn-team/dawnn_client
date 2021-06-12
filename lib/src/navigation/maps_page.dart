@@ -33,15 +33,14 @@ class _MapPageState extends State<MapPage> {
         body: GoogleMap(
           mapType: MapType.hybrid,
           onMapCreated: (GoogleMapController googleMapController) =>
-              {_onMapCreated(googleMapController, context)},
+              {_onMapCreated(googleMapController)},
           initialCameraPosition: CameraPosition(target: _center, zoom: 4),
           markers: Set.of(_markers.values),
         ));
   }
 
   /// Called when the map is created.
-  void _onMapCreated(
-      GoogleMapController googleMapController, BuildContext context) async {
+  void _onMapCreated(GoogleMapController googleMapController) async {
     print('Map loaded, requesting images.');
 
     _prepareGenerateMarkers(await NetworkUtils.requestImages());

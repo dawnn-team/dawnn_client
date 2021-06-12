@@ -1,16 +1,16 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
 import 'package:dawnn_client/src/network/objects/location.dart' as loc;
 import 'package:device_info/device_info.dart';
+import 'package:flash/flash.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:location/location.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 /// Utility class concerning client related actions.
 class ClientUtils {
@@ -70,25 +70,21 @@ class ClientUtils {
   static void displayResponse(BuildContext context, int responseCode,
       String successText, String failText) {
     String message;
-    Color color;
 
     if (responseCode == -1) {
-      showTopSnackBar(context, CustomSnackBar.error(message: failText));
+      context.showErrorBar(content: Text(failText));
       return;
     }
 
     if (responseCode == 400) {
       message = 'Error code 400, bad request. Please report this error.';
-      color = Colors.red;
     } else if (responseCode == 200) {
       message = successText;
-      color = Colors.green;
     } else {
       message = 'Unexpected response code: ' + responseCode.toString();
-      color = Colors.blueAccent;
     }
 
-    showTopSnackBar(
-        context, CustomSnackBar.info(message: message, backgroundColor: color));
+    context.showInfoBar(
+        content: Text(message), icon: Icon(Icons.check_circle_rounded));
   }
 }

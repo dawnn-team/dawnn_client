@@ -24,9 +24,9 @@ class DawnnClient extends StatefulWidget {
 }
 
 class _DawnnClientState extends State<DawnnClient> {
-  final CameraDescription camera;
+  final CameraDescription _camera;
 
-  _DawnnClientState(this.camera);
+  _DawnnClientState(this._camera);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class _DawnnClientState extends State<DawnnClient> {
       theme: ThemeData(
           primaryColor: Colors.red,
           visualDensity: VisualDensity.adaptivePlatformDensity),
-      home: HomePage(this.camera),
+      home: HomePage(this._camera),
     );
   }
 }
