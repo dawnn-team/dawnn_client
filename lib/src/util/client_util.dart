@@ -1,25 +1,52 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
 import 'package:dawnn_client/src/network/objects/location.dart' as loc;
 import 'package:device_info/device_info.dart';
+import 'package:flash/flash.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:location/location.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Utility class concerning client related actions.
 class ClientUtils {
   static var _location = Location();
 
   /// Get the current location as a Location object.
+  ///
+  /// Asynchronously stores the data using [_saveLocation]
   static Future<loc.Location> getLocation() async {
     LocationData locationData = await _location.getLocation();
-    return loc.Location(locationData.latitude, locationData.longitude);
+    var location = loc.Location(locationData.latitude, locationData.longitude);
+
+    // Don't wait for saving/updating location to complete.
+    _saveLocation(location);
+    return location;
+  }
+
+  /// Save the location to settings asynchronously.
+  @deprecated
+  static void _saveLocation(loc.Location location) async {
+    // This is deprecated because a solution using this would require passing
+    // singleton instance of SharedPreferences through constructors.
+    var prefs = await SharedPreferences.getInstance();
+
+    // Impossible values so we know this data is invalid.
+    var lat = prefs.getDouble('location_lat') ?? -200.0;
+    var long = prefs.getDouble('location_long') ?? -200.0;
+
+    var savedLocation = loc.Location(lat, long);
+
+    // Data is invalid - let's save new data.
+    if (savedLocation.longitude == -200 || savedLocation.latitude == -200) {
+      prefs.setDouble('location_lat', location.latitude);
+      prefs.setDouble('location_long', location.longitude);
+    }
   }
 
   /// Get the HWID of this device.
@@ -70,25 +97,21 @@ class ClientUtils {
   static void displayResponse(BuildContext context, int responseCode,
       String successText, String failText) {
     String message;
-    Color color;
 
     if (responseCode == -1) {
-      showTopSnackBar(context, CustomSnackBar.error(message: failText));
+      context.showErrorBar(content: Text(failText));
       return;
     }
 
     if (responseCode == 400) {
       message = 'Error code 400, bad request. Please report this error.';
-      color = Colors.red;
     } else if (responseCode == 200) {
       message = successText;
-      color = Colors.green;
     } else {
       message = 'Unexpected response code: ' + responseCode.toString();
-      color = Colors.blueAccent;
     }
 
-    showTopSnackBar(
-        context, CustomSnackBar.info(message: message, backgroundColor: color));
+    context.showInfoBar(
+        content: Text(message), icon: Icon(Icons.check_circle_rounded));
   }
 }

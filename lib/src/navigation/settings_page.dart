@@ -32,7 +32,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   /// Brings up the menu related to language selection.
-  void languageTapped(BuildContext context) {
+  void languageTapped() {
     // Call up a menu to chose language
     // Probably a late game feature
     print('chose language');
