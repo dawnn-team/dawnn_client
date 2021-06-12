@@ -17,7 +17,6 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  // TODO: Start camera at user location
   final LatLng _center = const LatLng(0, 0);
   Location _location = Location();
 
@@ -36,12 +35,12 @@ class _MapPageState extends State<MapPage> {
               {_onMapCreated(googleMapController)},
           initialCameraPosition: CameraPosition(target: _center, zoom: 1),
           markers: Set.of(_markers.values),
+          myLocationEnabled: true,
         ));
   }
 
   /// Called when the map is created.
   void _onMapCreated(GoogleMapController googleMapController) async {
-
     // Slight redundancy here, we're getting locationData here and in NetworkUtils.requestImages()
     // Would a solution be to overload requestImages with a header that accepts locationData object?
     var locData = await _location.getLocation();
