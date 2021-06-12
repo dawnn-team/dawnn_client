@@ -5,7 +5,7 @@ import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Settings.init(cacheProvider: SharePreferenceCache());
+  await Settings.init();
   WidgetsFlutterBinding.ensureInitialized();
   final cameras = await availableCameras();
   final firstCamera = cameras.first;
@@ -36,6 +36,7 @@ class _DawnnClientState extends State<DawnnClient> {
           primaryColor: Colors.red,
           visualDensity: VisualDensity.adaptivePlatformDensity),
       home: HomePage(this._camera),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

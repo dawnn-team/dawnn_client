@@ -18,6 +18,25 @@ class Location {
   double latitude;
   double longitude;
 
+  @override
+  bool operator ==(Object other) {
+    if (other is Location) {
+      return other.latitude == this.latitude &&
+          other.longitude == this.longitude &&
+          other.time == this.time;
+    }
+    return false;
+  }
+
+  /// Check if this [Location] is equal to another location, disregarding time.
+  bool equals(Object other) {
+    if (other is Location) {
+      return other.latitude == this.latitude &&
+          other.longitude == this.longitude;
+    }
+    return false;
+  }
+
   // Dart's int can be fit into Java's long.
   int time;
 
