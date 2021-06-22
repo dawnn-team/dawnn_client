@@ -74,6 +74,7 @@ class _MapPageState extends State<MapPage> {
 
     if (images == null) {
       print('Server did not respond, not generating any makers.');
+      return;
     }
 
     _generateMarkers(images);
