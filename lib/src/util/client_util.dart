@@ -99,7 +99,14 @@ class ClientUtils {
     String message;
 
     if (responseCode == -1) {
-      context.showErrorBar(content: Text(failText));
+      context.showFlashBar(
+          content: Text(failText),
+          icon: Icon(Icons.error),
+          enableVerticalDrag: true,
+          persistent: false,
+          duration: Duration(seconds: 3),
+          indicatorColor: Colors.amber,
+      );
       return;
     }
 
@@ -111,7 +118,12 @@ class ClientUtils {
       message = 'Unexpected response code: ' + responseCode.toString();
     }
 
-    context.showInfoBar(
-        content: Text(message), icon: Icon(Icons.check_circle_rounded));
+    context.showFlashBar(
+        content: Text(message),
+        icon: Icon(Icons.check_circle_rounded),
+        enableVerticalDrag: true,
+        persistent: false,
+        duration: Duration(seconds: 3),
+        indicatorColor: Colors.green);
   }
 }

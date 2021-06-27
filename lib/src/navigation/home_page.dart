@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
 
   /// Handle the switch between pages, and execute an action based on page.
   ///
-  /// The [page] corresponds to widgets in [_pages].
+  /// The [page] corresponds to the index of widgets in [_pages].
   void _handleSwitch(int page, BuildContext context) {
     // We're switching to maps page,
     // Let's ask for image data again.
