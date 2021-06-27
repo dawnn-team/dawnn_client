@@ -37,7 +37,7 @@ class NetworkUtils {
           Uri(
             scheme: 'http',
             userInfo: '',
-            host: '10.0.2.2',
+            host: 'api.dawnn.org',
             port: 2423,
             path: '/api/v1/image/',
           ),
@@ -73,7 +73,7 @@ class NetworkUtils {
           Uri(
             scheme: 'http',
             path: '/api/v1/image/request',
-            host: '10.0.2.2',
+            host: 'api.dawnn.org',
             port: 2423,
           ),
           body: json.encode(user.toJson()),
@@ -117,7 +117,7 @@ class NetworkUtils {
         Uri(
           scheme: 'http',
           userInfo: '',
-          host: '10.0.2.2',
+          host: 'api.dawnn.org',
           port: 2423,
           path: '/api/v1/user/',
         ),

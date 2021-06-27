@@ -7,15 +7,15 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Settings.init();
   WidgetsFlutterBinding.ensureInitialized();
-  final cameras = await availableCameras();
-  final firstCamera = cameras.first;
+  final List<CameraDescription> cameras = await availableCameras();
+  final CameraDescription firstCamera = cameras.first;
 
   runApp(DawnnClient(camera: firstCamera));
 }
 
 class DawnnClient extends StatefulWidget {
   // This parameter is passed all the way through the app - is there a better way?
-  final camera;
+  final CameraDescription camera;
 
   const DawnnClient({Key key, this.camera}) : super(key: key);
 

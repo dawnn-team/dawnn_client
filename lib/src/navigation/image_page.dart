@@ -10,12 +10,12 @@ import 'package:flutter/material.dart';
 ///
 /// On post calls [NetworkUtils.postImage].
 class ImagePage extends StatefulWidget {
-  final imagePath;
+  final String _imagePath;
 
-  ImagePage(this.imagePath);
+  ImagePage(this._imagePath);
 
   @override
-  State<StatefulWidget> createState() => _ImagePageState(imagePath);
+  State<StatefulWidget> createState() => _ImagePageState(_imagePath);
 }
 
 class _ImagePageState extends State<ImagePage> {
@@ -41,15 +41,20 @@ class _ImagePageState extends State<ImagePage> {
           alignment: Alignment.center,
           child: ListView(children: [
             Image.file(File(_imagePath)),
-            CupertinoTextField(
-                controller: _textEditingController,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                // TODO: Sanitize input here, and later on server?
-                onSubmitted: (String string) => {_caption = string},
-                onTap: _clearString),
+            Container(
+                margin: const EdgeInsets.all(5.0),
+                padding: const EdgeInsets.all(3.0),
+                decoration:
+                    BoxDecoration(border: Border.all(color: Colors.blueAccent)),
+                child: CupertinoTextField(
+                    controller: _textEditingController,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    // TODO: Sanitize input here, and later on server?
+                    onSubmitted: (String string) => {_caption = string},
+                    onTap: _clearString)),
             ElevatedButton(
-                onPressed: () => _evaluateAndWarn(),
-                child: Text('Post image'))
+                onPressed: () => _evaluateAndWarn(), child: Text('Post image'))
           ])),
     );
   }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dawnn_client/src/network/objects/image.dart' as img;
 import 'package:dawnn_client/src/util/network_util.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,15 +14,36 @@ import 'image_viewer_page.dart';
 /// Google Maps loads first, after which it goes through a pipeline
 /// ending in a call to [NetworkUtils.requestImages].
 class MapPage extends StatefulWidget {
+  final Stream shouldTriggerChange;
+
+  MapPage(this.shouldTriggerChange);
+
   @override
   State<StatefulWidget> createState() => _MapPageState();
 }
 
 class _MapPageState extends State<MapPage> {
+  StreamSubscription streamSubscription;
   final LatLng _center = const LatLng(0, 0);
   Location _location = Location();
 
+  // Important to not let this screw things up later.
+  bool _requesting = false;
+
   Map<MarkerId, Marker> _markers = <MarkerId, Marker>{};
+
+  @override
+  void initState() {
+    streamSubscription =
+        widget.shouldTriggerChange.listen((_) => updateMarkers());
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    streamSubscription.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +69,11 @@ class _MapPageState extends State<MapPage> {
     var locData = await _location.getLocation();
 
     googleMapController.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: LatLng(locData.latitude, locData.longitude), zoom: 14)));
+        CameraPosition(
+            target: LatLng(locData.latitude, locData.longitude), zoom: 14)));
     print('Map loaded, requesting images.');
 
-    _prepareGenerateMarkers(await NetworkUtils.requestImages());
+    updateMarkers();
 
     // var currentLoc = await ClientUtils.getLocation();
     // context.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
@@ -65,15 +89,31 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
+  /// Update markers inside the map.
+  ///
+  /// Used by [HomePage] when user switches between pages in order to update the map.
+  void updateMarkers() async {
+    if (!_requesting) {
+      print('Updating markers.');
+      _requesting = true;
+      _prepareGenerateMarkers(await NetworkUtils.requestImages());
+    } else {
+      print('Not updating markers, they have already been requested.');
+    }
+  }
+
   void _prepareGenerateMarkers(List<img.Image> images) async {
-    // Don't draw if not mounted.
+    // Don't draw if this widget is not mounted, or there are no images.
+    // Don't forget to end the process.
     if (!mounted) {
       print('Aborting preparing to generate map markers.');
+      _requesting = false;
       return;
     }
 
     if (images == null) {
       print('Server did not respond, not generating any makers.');
+      _requesting = false;
       return;
     }
 
@@ -100,6 +140,9 @@ class _MapPageState extends State<MapPage> {
       });
     }
 
+    // We just received the new markers, let's remove the old ones.
+    _markers.clear();
+
     setState(() {
       for (var finishedMarkers in markers.entries) {
         _markers[finishedMarkers.key] = finishedMarkers.value;
@@ -108,6 +151,9 @@ class _MapPageState extends State<MapPage> {
 
     var ending = (markers.length == 1 ? ' marker' : ' markers') + '.';
     print('Added ' + markers.length.toString() + '$ending');
+
+    // Finish requesting process.
+    _requesting = false;
   }
 
   void viewImage(img.Image image) {

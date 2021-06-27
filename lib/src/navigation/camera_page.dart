@@ -17,7 +17,7 @@ class CameraPage extends StatefulWidget {
 }
 
 class _CameraPageState extends State<CameraPage> {
-  // Camera stuff
+  // Camera related
   CameraController _controller;
   Future<void> _initializeControllerFuture;
 

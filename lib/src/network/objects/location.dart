@@ -37,7 +37,7 @@ class Location {
     return false;
   }
 
-  // Dart's int can be fit into Java's long.
+  // Java's long can fit into Dart's int.
   int time;
 
   factory Location.fromJson(Map<String, dynamic> json) =>
