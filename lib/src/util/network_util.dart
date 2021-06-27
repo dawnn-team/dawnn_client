@@ -44,11 +44,11 @@ class NetworkUtils {
           body: body,
           headers: {
             'Content-type': 'application/json'
-          }).timeout(Duration(seconds: 10));
+          });
     } catch (e) {
       // Probably timed out.
       print(e);
-      return -1;
+      return response == null ? -1 : response.statusCode;
     }
 
     client.close();
