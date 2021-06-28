@@ -22,21 +22,24 @@ class MapPage extends StatefulWidget {
   State<StatefulWidget> createState() => _MapPageState();
 }
 
-class _MapPageState extends State<MapPage> {
+class _MapPageState extends State<MapPage> with AutomaticKeepAliveClientMixin {
+  // Listen to events denoting the need to update markers.
   StreamSubscription streamSubscription;
-  final LatLng _center = const LatLng(0, 0);
   Location _location = Location();
 
-  // Important to not let this screw things up later.
+  // This keeps track of the current image requesting process.
   bool _requesting = false;
 
   Map<MarkerId, Marker> _markers = <MarkerId, Marker>{};
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   void initState() {
+    super.initState();
     streamSubscription =
         widget.shouldTriggerChange.listen((_) => updateMarkers());
-    super.initState();
   }
 
   @override
@@ -47,6 +50,7 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
         appBar: AppBar(
           title: Text('Maps Page'), // TODO Load name according to language
@@ -54,9 +58,8 @@ class _MapPageState extends State<MapPage> {
         ),
         body: GoogleMap(
           mapType: MapType.hybrid,
-          onMapCreated: (GoogleMapController googleMapController) =>
-              {_onMapCreated(googleMapController)},
-          initialCameraPosition: CameraPosition(target: _center, zoom: 1),
+          onMapCreated: _onMapCreated,
+          initialCameraPosition: CameraPosition(target: LatLng(0, 0), zoom: 1),
           markers: Set.of(_markers.values),
           myLocationEnabled: true,
         ));

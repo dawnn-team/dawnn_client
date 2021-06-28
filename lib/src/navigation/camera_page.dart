@@ -24,10 +24,14 @@ class _CameraPageState extends State<CameraPage> {
   @override
   void initState() {
     super.initState();
-
     _controller = CameraController(widget.camera, ResolutionPreset.max);
-
     _initializeControllerFuture = _controller.initialize();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override

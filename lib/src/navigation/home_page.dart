@@ -6,7 +6,6 @@ import 'package:dawnn_client/src/navigation/maps_page.dart';
 import 'package:dawnn_client/src/navigation/settings_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 /// Home navigation page.
 ///
@@ -25,6 +24,17 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final StreamController changeNotifier;
 
+  int _selectedIndex = 1;
+  List<Widget> _pages;
+
+  PageController pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    pageController = PageController(initialPage: 1);
+  }
+
   _HomePageState(_camera, this.changeNotifier)
       : _pages = [
           CameraPage(_camera),
@@ -38,49 +48,42 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  PersistentTabController _controller =
-      PersistentTabController(initialIndex: 1);
-
-  List<Widget> _pages;
-
-  List<PersistentBottomNavBarItem> _icons = [
-    PersistentBottomNavBarItem(
-        icon: Icon(Icons.camera_alt),
-        title: 'Camera',
-        activeColorPrimary: CupertinoColors.white,
-        inactiveColorPrimary: CupertinoColors.systemGrey2),
-    PersistentBottomNavBarItem(
-        icon: Icon(Icons.map),
-        title: 'Map',
-        activeColorPrimary: CupertinoColors.white,
-        inactiveColorPrimary: CupertinoColors.systemGrey2),
-    PersistentBottomNavBarItem(
-        icon: Icon(Icons.settings),
-        title: 'Settings',
-        activeColorPrimary: CupertinoColors.white,
-        inactiveColorPrimary: CupertinoColors.systemGrey2)
-  ];
+  /// Handles the tapping of the navigation bar.
+  ///
+  /// If the index to switch is 1, (the index of [MapPage] in [_pages]),
+  /// then we kindly ask the map page to update :)
+  void _onTapped(int index) {
+    // Switching to Map Page, let's make them ask for image data again.
+    if (index == 1) {
+      changeNotifier.sink.add(null);
+    }
+    setState(() {
+      _selectedIndex = index;
+    });
+    pageController.jumpToPage(index);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return PersistentTabView(
-      context,
-      screens: _pages,
-      items: _icons,
-      controller: _controller,
-      backgroundColor: Colors.red,
-      onItemSelected: (int page) => _handleSwitch(page, context),
+    return Scaffold(
+      body: PageView(
+          controller: pageController,
+          children: _pages,
+          // This is a little dirt, but it works.
+          physics: NeverScrollableScrollPhysics()),
+      bottomNavigationBar: BottomNavigationBar(
+          items: [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.camera_alt), label: 'Camera'),
+            BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.settings), label: 'Settings')
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.white54,
+          backgroundColor: Theme.of(context).primaryColor,
+          onTap: _onTapped),
     );
-  }
-
-  /// Handle the switch between pages, and execute an action based on page.
-  ///
-  /// The [page] corresponds to the index of widgets in [_pages].
-  void _handleSwitch(int page, BuildContext context) {
-    // We're switching to maps page,
-    // Let's ask for image data again.
-    if (page == 1) {
-      changeNotifier.sink.add(null);
-    }
   }
 }
