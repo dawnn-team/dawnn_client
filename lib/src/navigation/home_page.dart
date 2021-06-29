@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:camera/camera.dart';
 import 'package:dawnn_client/src/navigation/camera_page.dart';
-import 'package:dawnn_client/src/navigation/maps_page.dart';
+import 'package:dawnn_client/src/navigation/map_page.dart';
 import 'package:dawnn_client/src/navigation/settings_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +51,8 @@ class _HomePageState extends State<HomePage> {
   /// Handles the tapping of the navigation bar.
   ///
   /// If the index to switch is 1, (the index of [MapPage] in [_pages]),
-  /// then we kindly ask the map page to update :)
+  /// then we push a null event through a stream. [MapPage] listens to that
+  /// and requests new images.
   void _onTapped(int index) {
     // Switching to Map Page, let's make them ask for image data again.
     if (index == 1) {
@@ -69,7 +70,7 @@ class _HomePageState extends State<HomePage> {
       body: PageView(
           controller: pageController,
           children: _pages,
-          // This is a little dirt, but it works.
+          // This is a little dirty, but it works.
           physics: NeverScrollableScrollPhysics()),
       bottomNavigationBar: BottomNavigationBar(
           items: [
