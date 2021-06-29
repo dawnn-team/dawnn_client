@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dawnn_client/src/network/objects/image.dart' as img;
+import 'package:dawnn_client/src/util/client_util.dart';
 import 'package:dawnn_client/src/util/network_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -152,8 +153,7 @@ class _MapPageState extends State<MapPage> with AutomaticKeepAliveClientMixin {
       }
     });
 
-    var ending = (markers.length == 1 ? ' marker' : ' markers') + '.';
-    print('Added ' + markers.length.toString() + '$ending');
+    ClientUtils.markersLoaded(context, markers.length);
 
     // Finish requesting process.
     _requesting = false;

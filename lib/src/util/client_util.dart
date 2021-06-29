@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:crypto/crypto.dart';
 import 'package:dawnn_client/src/network/objects/location.dart' as loc;
@@ -100,12 +101,12 @@ class ClientUtils {
 
     if (responseCode == -1) {
       context.showFlashBar(
-          content: Text(failText),
-          icon: Icon(Icons.error),
-          enableVerticalDrag: true,
-          persistent: false,
-          duration: Duration(seconds: 3),
-          indicatorColor: Colors.amber,
+        content: Text(failText),
+        icon: Icon(Icons.error),
+        enableVerticalDrag: true,
+        persistent: true,
+        duration: Duration(seconds: 3),
+        indicatorColor: Colors.amber,
       );
       return;
     }
@@ -123,6 +124,21 @@ class ClientUtils {
         icon: Icon(Icons.check_circle_rounded),
         enableVerticalDrag: true,
         persistent: false,
+        duration: Duration(seconds: 3),
+        indicatorColor: Colors.green);
+  }
+
+  /// Notifies the user how many markers were loaded.
+  static void markersLoaded(BuildContext context, int markers) {
+    // FIXME This will interfere with localization later.
+    var plural = (markers == 1 ? ' marker' : ' markers') + '.';
+
+    context.showFlashBar(
+        content: Text('Loaded $markers $plural'),
+        position: FlashPosition.top,
+        icon: Icon(Icons.add),
+        behavior: FlashBehavior.floating,
+        enableVerticalDrag: true,
         duration: Duration(seconds: 3),
         indicatorColor: Colors.green);
   }

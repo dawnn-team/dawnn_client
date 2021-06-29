@@ -54,8 +54,8 @@ class _HomePageState extends State<HomePage> {
   /// then we push a null event through a stream. [MapPage] listens to that
   /// and requests new images.
   void _onTapped(int index) {
-    // Switching to Map Page, let's make them ask for image data again.
     if (index == 1) {
+      // User wants to update marker data
       changeNotifier.sink.add(null);
     }
     setState(() {
