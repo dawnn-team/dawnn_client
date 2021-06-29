@@ -36,7 +36,7 @@ class _ImageViewerPageState extends State<ImageViewerPage> {
             image.caption,
             textAlign: TextAlign.center,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            overflow: TextOverflow.ellipsis,
+            overflow: TextOverflow.visible,
           )
         ]),
       ),
