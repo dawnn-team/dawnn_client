@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 /// Views an [img.Image] with the caption and image displayed.
 ///
-/// Created when constructing markers in [MapsPage]. Converts [imgBase64]
+/// Created when constructing markers in [MapPage]. Converts [imgBase64]
 /// to a full widget only when displayed, thus saving memory.
 class ImageViewerPage extends StatefulWidget {
   final img.Image imgBase64;

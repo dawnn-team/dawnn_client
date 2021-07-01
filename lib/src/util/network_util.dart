@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dawnn_client/src/navigation/map_page.dart';
 import 'package:dawnn_client/src/network/objects/user.dart';
 import 'package:dawnn_client/src/util/client_util.dart';
 import 'package:flutter/cupertino.dart';
@@ -106,7 +107,7 @@ class NetworkUtils {
   /// Send a client update to the server.
   ///
   /// Constructs a [User] and sends to server. Should only be used when requesting
-  /// images for [MapsPage]. Currently deprecated because all server endpoints
+  /// images for [MapPage]. Currently deprecated because all server endpoints
   /// explicitly require a full user object, making this obsolete.
   @deprecated
   static Future<void> sendClientUpdate() async {

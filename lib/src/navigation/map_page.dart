@@ -54,7 +54,7 @@ class _MapPageState extends State<MapPage> with AutomaticKeepAliveClientMixin {
     super.build(context);
     return Scaffold(
         appBar: AppBar(
-          title: Text('Maps Page'), // TODO Load name according to language
+          title: Text('Map Page'), // TODO Load name according to language
           centerTitle: true,
         ),
         body: GoogleMap(
