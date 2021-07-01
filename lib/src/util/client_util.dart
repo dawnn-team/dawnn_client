@@ -131,7 +131,7 @@ class ClientUtils {
   /// Notifies the user how many markers were loaded.
   static void markersLoaded(BuildContext context, int markers) {
     // FIXME This will interfere with localization later.
-    var plural = (markers == 1 ? ' marker' : ' markers') + '.';
+    var plural = (markers == 1 ? 'marker' : 'markers') + '.';
 
     context.showFlashBar(
         content: Text('Loaded $markers $plural'),
