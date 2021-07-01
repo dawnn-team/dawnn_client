@@ -11,6 +11,9 @@ import '../network/objects/image.dart' as img;
 
 /// Utility class concerning network related actions.
 class NetworkUtils {
+
+  static const String _host = 'dev.dawnn.org';
+
   /// Constructs an [img.Image] and posts it to the server.
   ///
   /// Using provided image at [imagePath] and user
@@ -37,7 +40,7 @@ class NetworkUtils {
           Uri(
             scheme: 'http',
             userInfo: '',
-            host: 'api.dawnn.org',
+            host: _host,
             port: 2423,
             path: '/api/v1/image/',
           ),
@@ -73,7 +76,7 @@ class NetworkUtils {
           Uri(
             scheme: 'http',
             path: '/api/v1/image/request',
-            host: 'api.dawnn.org',
+            host: _host,
             port: 2423,
           ),
           body: json.encode(user.toJson()),
@@ -117,7 +120,7 @@ class NetworkUtils {
         Uri(
           scheme: 'http',
           userInfo: '',
-          host: 'api.dawnn.org',
+          host: _host,
           port: 2423,
           path: '/api/v1/user/',
         ),
