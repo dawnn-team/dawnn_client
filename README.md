@@ -22,9 +22,9 @@
   ### Getting started
    To get started, clone this repository. Make sure you have all the [necessary tools](https://flutter.dev/docs/get-started/install) for Flutter development.
   ### Usage
-   To use this project properly, you need a Google Maps API key. Information regarding this can be found [here](https://developers.google.com/maps/documentation/javascript/get-api-key). Depending on the platform being targetted, you will need to add the API key to either ``android/app/main/AndroidManifest.xml`` or ``ios/Runner/AppDelgate.swift``. When without an API key, the map component will not function properly.
+   To use this project properly, you need a Google Maps API key. Information regarding this can be found [here](https://developers.google.com/maps/documentation/javascript/get-api-key). Depending on the platform being targetted, you will need to add the API key to either ``android/app/main/AndroidManifest.xml`` or ``ios/Runner/AppDelgate.swift``. Without an API key, the map component will not function properly.
    
-   When testing the application, requests should be directed at ``dev.dawnn.org``. When the app enters production, requests from non-production clients to ``api.dawnn.org`` will be denied.
+   During testing, requests should be directed at ``dev.dawnn.org``. When the app enters production, requests from non-production clients to ``api.dawnn.org`` will be denied.
    
 # Contributing
 In order to contribute, check out our [projects](https://github.com/orgs/dawnn-team/projects). Choose a goal, and then an issue/feature/bug to work on. Please follow our [contribution guidelines](https://github.com/dawnn-team/dawnn_client/blob/main/CONTRIBUTING.md).
