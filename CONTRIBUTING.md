@@ -40,4 +40,4 @@ In general, we follow the ["fork-and-pull" Git workflow](https://github.com/susa
 
 ## Getting Help
 
-Join us in one of our social media channels (coming soon) and post your question there.
+Open an issue, or email us with any questions at ``admin@dawnn.org``. 
