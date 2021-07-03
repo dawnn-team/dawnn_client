@@ -12,8 +12,7 @@ class Location {
   ///
   /// [time] will always be the current time in UTC, and therefore
   /// independent of the time zone.
-  Location(this.latitude, this.longitude)
-      : time = DateTime.now().millisecondsSinceEpoch;
+  Location(this.latitude, this.longitude);
 
   double latitude;
   double longitude;
@@ -22,8 +21,7 @@ class Location {
   bool operator ==(Object other) {
     if (other is Location) {
       return other.latitude == this.latitude &&
-          other.longitude == this.longitude &&
-          other.time == this.time;
+          other.longitude == this.longitude;
     }
     return false;
   }
@@ -36,9 +34,6 @@ class Location {
     }
     return false;
   }
-
-  // Java's long can fit into Dart's int.
-  int time;
 
   factory Location.fromJson(Map<String, dynamic> json) =>
       _$LocationFromJson(json);

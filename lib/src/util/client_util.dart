@@ -99,7 +99,7 @@ class ClientUtils {
         content: Text(message),
         icon: Icon(Icons.check_circle_rounded),
         enableVerticalDrag: true,
-        persistent: false,
+        persistent: true,
         duration: Duration(seconds: 3),
         indicatorColor: Colors.green);
   }
