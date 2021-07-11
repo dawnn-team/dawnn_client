@@ -1,5 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:dawnn_client/src/navigation/home_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 
@@ -28,15 +30,29 @@ class _DawnnClientState extends State<DawnnClient> {
 
   _DawnnClientState(this._camera);
 
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      // TODO Load primarySwatch from config.
-      theme: ThemeData(
-          primaryColor: Colors.red,
-          visualDensity: VisualDensity.adaptivePlatformDensity),
-      home: HomePage(this._camera),
-      debugShowCheckedModeBanner: false,
-    );
+    return FutureBuilder(
+        future: _initialization,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            print(snapshot.error);
+          }
+          if (snapshot.connectionState == ConnectionState.done) {
+            return MaterialApp(
+              // TODO Load primarySwatch from config.
+              theme: ThemeData(
+                  primaryColor: Colors.red,
+                  visualDensity: VisualDensity.adaptivePlatformDensity),
+              home: HomePage(this._camera),
+              debugShowCheckedModeBanner: false,
+            );
+          }
+          // TODO Make better load screen
+          print('Loading the app');
+          return Center(child: CircularProgressIndicator());
+        });
   }
 }

@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:dawnn_client/src/network/objects/image.dart' as img;
 import 'package:dawnn_client/src/util/client_util.dart';
 import 'package:dawnn_client/src/util/network_util.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'image_viewer_page.dart';
 
@@ -71,6 +73,30 @@ class _MapPageState extends State<MapPage> with AutomaticKeepAliveClientMixin {
     // Slight redundancy here, we're getting locationData here and in NetworkUtils.requestImages()
     // Would a solution be to overload requestImages with a header that accepts locationData object?
     var locData = await _location.getLocation();
+
+    // TODO Move this to a more fitting place
+    NotificationSettings settings =
+        await FirebaseMessaging.instance.requestPermission(
+            alert: true,
+            announcement: false,
+            badge: true,
+            carPlay: false,
+            // ?
+            criticalAlert: false,
+            provisional: false,
+            sound: true);
+
+    print('User granted permission: ${settings.authorizationStatus}');
+
+    // TODO Move this somewhere else
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+      }
+    });
 
     googleMapController.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(
