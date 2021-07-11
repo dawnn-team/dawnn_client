@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:dawnn_client/src/background/notification_controller.dart';
 import 'package:dawnn_client/src/navigation/home_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -8,11 +9,17 @@ import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Settings.init();
-  WidgetsFlutterBinding.ensureInitialized();
   final List<CameraDescription> cameras = await availableCameras();
   final CameraDescription firstCamera = cameras.first;
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   runApp(DawnnClient(camera: firstCamera));
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+
+  print('Handling a background message: ${message.messageId}');
 }
 
 class DawnnClient extends StatefulWidget {
@@ -41,6 +48,10 @@ class _DawnnClientState extends State<DawnnClient> {
             print(snapshot.error);
           }
           if (snapshot.connectionState == ConnectionState.done) {
+            // Firebase app has finished initializing, let's start listening
+            // to messages.
+            NotificationController.controller;
+
             return MaterialApp(
               // TODO Load primarySwatch from config.
               theme: ThemeData(
@@ -50,7 +61,6 @@ class _DawnnClientState extends State<DawnnClient> {
               debugShowCheckedModeBanner: false,
             );
           }
-          // TODO Make better load screen
           print('Loading the app');
           return Center(child: CircularProgressIndicator());
         });
