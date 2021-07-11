@@ -10,12 +10,12 @@ class NotificationController {
   /// Get the controller, create if none exists.
   static NotificationController get controller {
     if (_controller == null) {
-      _controller = NotificationController();
+      _controller = NotificationController._();
     }
     return _controller;
   }
 
-  NotificationController() {
+  NotificationController._() {
     _listen();
   }
 
