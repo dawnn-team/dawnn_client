@@ -23,7 +23,13 @@ if (flutterVersionName == null) {
 
 apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
+dependencies {
+    implementation platform('com.google.firebase:firebase-bom:28.2.0')
+    implementation 'com.google.firebase:firebase-analytics'
+}
 android {
     compileSdkVersion 29
 
@@ -33,7 +39,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "org.dawnn.dawnnclient"
+        applicationId "org.dawnn.dawnn_client"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
