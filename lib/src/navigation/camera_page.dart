@@ -20,22 +20,33 @@ class _CameraPageState extends State<CameraPage> {
   // Camera related
   CameraController _controller;
   Future<void> _initializeControllerFuture;
+  bool _cameraExists;
 
   @override
   void initState() {
     super.initState();
-    _controller = CameraController(widget.camera, ResolutionPreset.max);
-    _initializeControllerFuture = _controller.initialize();
+    _cameraExists = widget.camera != null;
+    if (_cameraExists) {
+      _controller = CameraController(widget.camera, ResolutionPreset.max);
+      _initializeControllerFuture = _controller.initialize();
+    } else {
+      print('Not trying to initialize camera, none exists.');
+    }
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    if (_cameraExists) {
+      _controller.dispose();
+    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!_cameraExists) {
+      return Center(child: CircularProgressIndicator());
+    }
     return Scaffold(
         body: FutureBuilder<void>(
           future: _initializeControllerFuture,

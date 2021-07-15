@@ -10,9 +10,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Settings.init();
   final List<CameraDescription> cameras = await availableCameras();
-  final CameraDescription firstCamera = cameras.first;
+  final CameraDescription firstCamera =
+      cameras.isNotEmpty ? cameras.first : null;
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
+  if (firstCamera == null) {
+    print('No camera found; unsupported device or simulator.');
+  }
   runApp(DawnnClient(camera: firstCamera));
 }
 
