@@ -12,28 +12,10 @@ class Location {
   ///
   /// [time] will always be the current time in UTC, and therefore
   /// independent of the time zone.
-  Location(this.latitude, this.longitude);
+  Location(this.x, this.y);
 
-  double latitude;
-  double longitude;
-
-  @override
-  bool operator ==(Object other) {
-    if (other is Location) {
-      return other.latitude == this.latitude &&
-          other.longitude == this.longitude;
-    }
-    return false;
-  }
-
-  /// Check if this [Location] is equal to another location, disregarding time.
-  bool equals(Object other) {
-    if (other is Location) {
-      return other.latitude == this.latitude &&
-          other.longitude == this.longitude;
-    }
-    return false;
-  }
+  double x;
+  double y;
 
   factory Location.fromJson(Map<String, dynamic> json) =>
       _$LocationFromJson(json);

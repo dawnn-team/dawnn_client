@@ -19,11 +19,9 @@ class ClientUtils {
   /// Get the current location as a Location object.
   ///
   /// Asynchronously stores the data using [_saveLocation]
-  static Future<loc.Location> getLocation() async {
+  static Future<List<double>> getLocation() async {
     LocationData locationData = await _location.getLocation();
-    var location = loc.Location(locationData.latitude, locationData.longitude);
-
-    return location;
+    return [locationData.longitude, locationData.latitude];
   }
 
   /// Get the HWID of this device.
@@ -97,7 +95,7 @@ class ClientUtils {
 
     context.showFlashBar(
         content: Text(message),
-        icon: Icon(Icons.check_circle_rounded),
+        icon: Icon(responseCode == 200 ? Icons .check_circle_rounded : Icons.error),
         enableVerticalDrag: true,
         persistent: true,
         duration: Duration(seconds: 3),

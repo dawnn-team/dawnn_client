@@ -10,9 +10,10 @@ part 'user.g.dart';
 @JsonSerializable(explicitToJson: true)
 class User {
   /// Create a user at this [location] and [hwid].
-  User(this.location, this.hwid);
+  User(this.x, this.y, this.hwid);
 
-  Location location;
+  double x;
+  double y;
   String hwid;
 
   factory User.fromMap(Map<String, dynamic> json) => _$UserFromJson(json);

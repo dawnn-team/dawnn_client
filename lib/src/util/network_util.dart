@@ -12,8 +12,7 @@ import '../network/objects/image.dart' as img;
 
 /// Utility class concerning network related actions.
 class NetworkUtils {
-
-  static const String _host = 'dev.dawnn.org';
+  static const String _host = 'dev.dawnn.org'; // 10.0.2.2
 
   /// Constructs an [img.Image] and posts it to the server.
   ///
@@ -24,8 +23,8 @@ class NetworkUtils {
       BuildContext context, String imagePath, String caption) async {
     print('Building image and user.');
 
-    User user =
-        User(await ClientUtils.getLocation(), await ClientUtils.getHWID());
+    List<double> loc = await ClientUtils.getLocation();
+    var user = User(loc[0], loc[1], await ClientUtils.getHWID());
 
     var image = img.Image.emptyId(
         await ClientUtils.compressToBase64(File(imagePath)), caption, user);
@@ -46,9 +45,7 @@ class NetworkUtils {
             path: '/api/v1/image/',
           ),
           body: body,
-          headers: {
-            'Content-type': 'application/json'
-          });
+          headers: {'Content-type': 'application/json'});
     } catch (e) {
       // Probably timed out.
       print(e);
@@ -67,8 +64,8 @@ class NetworkUtils {
 
     var client = http.Client();
 
-    var user =
-        User(await ClientUtils.getLocation(), await ClientUtils.getHWID());
+    List<double> loc = await ClientUtils.getLocation();
+    var user = User(loc[0], loc[1], await ClientUtils.getHWID());
 
     // Use POST instead of GET with body.
     var response;
@@ -114,8 +111,8 @@ class NetworkUtils {
     print('Sending client update.');
     var client = http.Client();
 
-    var user =
-        User(await ClientUtils.getLocation(), await ClientUtils.getHWID());
+    List<double> loc = await ClientUtils.getLocation();
+    var user = User(loc[0], loc[1], await ClientUtils.getHWID());
 
     client.post(
         Uri(
