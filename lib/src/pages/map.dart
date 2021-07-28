@@ -1,15 +1,15 @@
 import 'dart:async';
 
 import 'package:dawnn_client/src/network/objects/image.dart' as img;
-import 'package:dawnn_client/src/util/client_util.dart';
-import 'package:dawnn_client/src/util/network_util.dart';
+import 'package:dawnn_client/src/util/client.dart';
+import 'package:dawnn_client/src/util/network.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
-import 'image_viewer_page.dart';
+import 'image_viewer.dart';
 
 /// A page displaying Google Maps with alerts on it.
 ///

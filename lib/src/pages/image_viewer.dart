@@ -32,11 +32,11 @@ class _ImageViewerPageState extends State<ImageViewerPage> {
         child: ListView(children: [
           Image.memory(Uint8List.fromList(base64.decode(image.base64))),
           // TODO: Make caption look better.
-          Text(
+          SelectableText(
             image.caption,
             textAlign: TextAlign.center,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            overflow: TextOverflow.visible,
+            // overflow: TextOverflow.visible,
           )
         ]),
       ),

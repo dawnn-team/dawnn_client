@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:dawnn_client/src/util/client_util.dart';
-import 'package:dawnn_client/src/util/network_util.dart';
+import 'package:dawnn_client/src/util/client.dart';
+import 'package:dawnn_client/src/util/network.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

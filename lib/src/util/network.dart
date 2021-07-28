@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dawnn_client/src/navigation/map_page.dart';
+import 'package:dawnn_client/src/pages/map.dart';
 import 'package:dawnn_client/src/network/objects/user.dart';
-import 'package:dawnn_client/src/util/client_util.dart';
+import 'package:dawnn_client/src/util/client.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;

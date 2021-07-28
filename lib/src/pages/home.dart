@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:camera/camera.dart';
-import 'package:dawnn_client/src/navigation/camera_page.dart';
-import 'package:dawnn_client/src/navigation/map_page.dart';
-import 'package:dawnn_client/src/navigation/settings_page.dart';
+import 'package:dawnn_client/src/pages/camera.dart';
+import 'package:dawnn_client/src/pages/map.dart';
+import 'package:dawnn_client/src/pages/settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

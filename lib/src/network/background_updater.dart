@@ -3,6 +3,10 @@
 /// Sends location updates to the server, allowing for accurate alerts.
 /// Not yet implemented.
 class BackGroundUpdater {
+
+  // FIXME this is useless
+
+
   /// Updates the location of the user in the background.
   ///
   /// Used to provide relevant notification data to the server.

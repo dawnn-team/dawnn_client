@@ -2,7 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'image_page.dart';
+import 'image.dart';
 
 /// Page that displays a camera.
 ///
@@ -64,6 +64,9 @@ class _CameraPageState extends State<CameraPage> {
             }
           },
         ),
+
+        //MediaQuery.of(context).size
+
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.camera_alt),
           onPressed: () async {
