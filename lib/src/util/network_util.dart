@@ -30,7 +30,9 @@ class NetworkUtils {
     var image = img.Image.emptyId(
         await ClientUtils.compressToBase64(File(imagePath)),
         caption,
-        user.hwid);
+        user.hwid,
+        user.longitude,
+        user.latitude);
 
     var body = json.encode(image.toJson());
 

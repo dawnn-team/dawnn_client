@@ -1,4 +1,3 @@
-import 'package:dawnn_client/src/network/objects/location.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user.g.dart';
@@ -10,10 +9,10 @@ part 'user.g.dart';
 @JsonSerializable(explicitToJson: true)
 class User {
   /// Create a user at this [location] and [hwid].
-  User(this.x, this.y, this.hwid);
+  User(this.longitude, this.latitude, this.hwid);
 
-  double x;
-  double y;
+  double longitude;
+  double latitude;
   String hwid;
 
   factory User.fromMap(Map<String, dynamic> json) => _$UserFromJson(json);

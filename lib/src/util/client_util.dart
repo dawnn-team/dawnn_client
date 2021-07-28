@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
-import 'package:dawnn_client/src/network/objects/location.dart' as loc;
 import 'package:device_info/device_info.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/cupertino.dart';
@@ -95,7 +94,8 @@ class ClientUtils {
 
     context.showFlashBar(
         content: Text(message),
-        icon: Icon(responseCode == 200 ? Icons .check_circle_rounded : Icons.error),
+        icon: Icon(
+            responseCode == 200 ? Icons.check_circle_rounded : Icons.error),
         enableVerticalDrag: true,
         persistent: true,
         duration: Duration(seconds: 3),

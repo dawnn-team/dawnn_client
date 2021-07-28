@@ -10,12 +10,14 @@ part 'image.g.dart';
 @JsonSerializable(explicitToJson: true)
 class Image {
   /// Create an image with all values specified.
-  Image(this.base64, this.caption, this.hwid, this.uuid);
+  Image(this.base64, this.caption, this.hwid, this.uuid, this.longitude,
+      this.latitude);
 
   /// Create an image without [uuid].
   ///
   /// Used for creating the image client side.
-  Image.emptyId(this.base64, this.caption, this.hwid);
+  Image.emptyId(
+      this.base64, this.caption, this.hwid, this.longitude, this.latitude);
 
   // Match server design to re-use one object
 
@@ -23,8 +25,6 @@ class Image {
   String caption;
   String hwid;
   String uuid;
-
-  // FIXME Missing these properties in constructors.
   double longitude;
   double latitude;
 
