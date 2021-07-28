@@ -10,19 +10,23 @@ part 'image.g.dart';
 @JsonSerializable(explicitToJson: true)
 class Image {
   /// Create an image with all values specified.
-  Image(this.base64, this.caption, this.user, this.uuid);
+  Image(this.base64, this.caption, this.hwid, this.uuid);
 
   /// Create an image without [uuid].
   ///
   /// Used for creating the image client side.
-  Image.emptyId(this.base64, this.caption, this.user);
+  Image.emptyId(this.base64, this.caption, this.hwid);
 
   // Match server design to re-use one object
 
   String base64;
   String caption;
-  User user;
+  String hwid;
   String uuid;
+
+  // FIXME Missing these properties in constructors.
+  double longitude;
+  double latitude;
 
   factory Image.fromMap(Map<String, dynamic> json) => _$ImageFromJson(json);
 

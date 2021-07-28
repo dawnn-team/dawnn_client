@@ -24,10 +24,13 @@ class NetworkUtils {
     print('Building image and user.');
 
     List<double> loc = await ClientUtils.getLocation();
+    // TODO We don't need to construct a full user to post an image.
     var user = User(loc[0], loc[1], await ClientUtils.getHWID());
 
     var image = img.Image.emptyId(
-        await ClientUtils.compressToBase64(File(imagePath)), caption, user);
+        await ClientUtils.compressToBase64(File(imagePath)),
+        caption,
+        user.hwid);
 
     var body = json.encode(image.toJson());
 

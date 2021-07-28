@@ -140,7 +140,7 @@ class _MapPageState extends State<MapPage> with AutomaticKeepAliveClientMixin {
             consumeTapEvents: true,
             infoWindow: InfoWindow(title: image.caption),
             position: LatLng(
-                image.user.x, image.user.y),
+                image.longitude, image.latitude),
             icon: BitmapDescriptor.defaultMarker)
       });
     }
