@@ -1,4 +1,6 @@
+import 'package:dawnn_client/src/util/client.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 
@@ -25,6 +27,17 @@ class _SettingsPageState extends State<SettingsPage> {
               // TODO Change theme.
             },
           ),
+          SwitchSettingsTile(
+            title: 'Randomize location',
+            settingKey: 'random-location',
+            onChange: (bool state) => {
+              if (!kDebugMode)
+                {
+                  ClientUtils.displayResponse(context, -1, '',
+                      'This option is only available in debug mode!')
+                }
+            },
+          )
           // This really shouldn't be worked on until the base features are finished.
         ],
       ),

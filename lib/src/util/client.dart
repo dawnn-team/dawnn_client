@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:crypto/crypto.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:location/location.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -18,8 +21,26 @@ class ClientUtils {
   /// Get the current location as an array,
   /// first element being longitude, second being latitude.
   static Future<List<double>> getLocation() async {
-    LocationData locationData = await _location.getLocation();
-    return [locationData.longitude, locationData.latitude];
+    // If in release mode, don't allow random locations
+    if (kReleaseMode) {
+      LocationData locationData = await _location.getLocation();
+      return [locationData.longitude, locationData.latitude];
+    } else {
+      // Else, check user preference.
+      if (Settings.getValue<bool>('random-location', false)) {
+        final random = Random();
+        random.nextBool();
+        int positiveLat = random.nextBool() ? 1 : -1;
+        int positiveLong = random.nextBool() ? 1 : -1;
+        return [
+          random.nextDouble() * 180 * positiveLong,
+          random.nextDouble() * 90 * positiveLat
+        ];
+      } else {
+        LocationData locationData = await _location.getLocation();
+        return [locationData.longitude, locationData.latitude];
+      }
+    }
   }
 
   /// Get the HWID of this device.

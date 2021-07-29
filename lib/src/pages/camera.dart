@@ -33,9 +33,6 @@ class _CameraPageState extends State<CameraPage> {
       print('Not trying to initialize camera, none exists.');
       return;
     }
-    _controller = CameraController(widget.camera, ResolutionPreset.max,
-        enableAudio: false);
-    _initializeControllerFuture = _controller.initialize();
   }
 
   @override
