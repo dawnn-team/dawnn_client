@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dawnn_client/src/pages/map.dart';
 import 'package:dawnn_client/src/network/objects/user.dart';
 import 'package:dawnn_client/src/util/client.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,15 +23,13 @@ class NetworkUtils {
     print('Building image and user.');
 
     List<double> loc = await ClientUtils.getLocation();
-    // FIXME We don't need to construct a full user to post an image.
-    var user = User(loc[0], loc[1], await ClientUtils.getHWID());
 
     var image = img.Image.emptyId(
         await ClientUtils.compressToBase64(File(imagePath)),
         caption,
-        user.HWID,
-        user.longitude,
-        user.latitude);
+        await ClientUtils.getHWID(),
+        loc[0],
+        loc[1]);
 
     var body = json.encode(image.toJson());
 
@@ -65,6 +62,7 @@ class NetworkUtils {
 
   /// Request images near our location in a list.
   static Future<List<img.Image>> requestImages() async {
+    // TODO Add caching logic to prevent needless http requests
     print('Requesting images.');
 
     var client = http.Client();
@@ -104,33 +102,5 @@ class NetworkUtils {
 
     print('Received images.');
     return images;
-  }
-
-  /// Send a client update to the server.
-  ///
-  /// Constructs a [User] and sends to server. Should only be used when requesting
-  /// images for [MapPage]. Currently deprecated because all server endpoints
-  /// explicitly require a full user object, making this obsolete.
-  @deprecated
-  static Future<void> sendClientUpdate() async {
-    print('Sending client update.');
-    var client = http.Client();
-
-    List<double> loc = await ClientUtils.getLocation();
-    var user = User(loc[0], loc[1], await ClientUtils.getHWID());
-
-    client.post(
-        Uri(
-          scheme: 'http',
-          userInfo: '',
-          host: _host,
-          port: 2423,
-          path: '/api/v1/user/',
-        ),
-        body: json.encode(user),
-        headers: {'Content-type': 'application/json'});
-
-    print('Sent client update.');
-    client.close();
   }
 }
