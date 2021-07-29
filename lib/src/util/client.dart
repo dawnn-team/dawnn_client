@@ -15,9 +15,8 @@ import 'package:path_provider/path_provider.dart';
 class ClientUtils {
   static var _location = Location();
 
-  /// Get the current location as a Location object.
-  ///
-  /// Asynchronously stores the data using [_saveLocation]
+  /// Get the current location as an array,
+  /// first element being longitude, second being latitude.
   static Future<List<double>> getLocation() async {
     LocationData locationData = await _location.getLocation();
     return [locationData.longitude, locationData.latitude];

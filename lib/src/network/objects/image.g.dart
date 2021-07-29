@@ -10,7 +10,7 @@ Image _$ImageFromJson(Map<String, dynamic> json) {
   return Image(
     json['base64'] as String,
     json['caption'] as String,
-    json['hwid'] as String,
+    json['authorHWID'] as String,
     json['uuid'] as String,
     (json['longitude'] as num)?.toDouble(),
     (json['latitude'] as num)?.toDouble(),
@@ -20,7 +20,7 @@ Image _$ImageFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$ImageToJson(Image instance) => <String, dynamic>{
       'base64': instance.base64,
       'caption': instance.caption,
-      'hwid': instance.hwid,
+      'authorHWID': instance.authorHWID,
       'uuid': instance.uuid,
       'longitude': instance.longitude,
       'latitude': instance.latitude,

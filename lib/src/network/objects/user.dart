@@ -5,15 +5,15 @@ part 'user.g.dart';
 /// Represents the user.
 ///
 /// This object is used in client updates and image posts.
-/// A user consists of a [hwid] and a [location].
+/// A user consists of a [HWID] and a [location].
 @JsonSerializable(explicitToJson: true)
 class User {
-  /// Create a user at this [location] and [hwid].
-  User(this.longitude, this.latitude, this.hwid);
+  /// Create a user at this [location] and [HWID].
+  User(this.longitude, this.latitude, this.HWID);
 
   double longitude;
   double latitude;
-  String hwid;
+  String HWID;
 
   factory User.fromMap(Map<String, dynamic> json) => _$UserFromJson(json);
 

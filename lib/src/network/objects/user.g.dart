@@ -10,12 +10,12 @@ User _$UserFromJson(Map<String, dynamic> json) {
   return User(
     (json['longitude'] as num)?.toDouble(),
     (json['latitude'] as num)?.toDouble(),
-    json['hwid'] as String,
+    json['HWID'] as String,
   );
 }
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'longitude': instance.longitude,
       'latitude': instance.latitude,
-      'hwid': instance.hwid,
+      'HWID': instance.HWID,
     };
