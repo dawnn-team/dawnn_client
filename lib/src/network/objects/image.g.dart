@@ -12,8 +12,8 @@ Image _$ImageFromJson(Map<String, dynamic> json) {
     json['caption'] as String,
     json['authorHWID'] as String,
     json['uuid'] as String,
-    (json['longitude'] as num)?.toDouble(),
-    (json['latitude'] as num)?.toDouble(),
+    (json['x'] as num)?.toDouble(),
+    (json['y'] as num)?.toDouble(),
   );
 }
 
@@ -22,6 +22,6 @@ Map<String, dynamic> _$ImageToJson(Image instance) => <String, dynamic>{
       'caption': instance.caption,
       'authorHWID': instance.authorHWID,
       'uuid': instance.uuid,
-      'longitude': instance.longitude,
-      'latitude': instance.latitude,
+      'x': instance.x,
+      'y': instance.y,
     };

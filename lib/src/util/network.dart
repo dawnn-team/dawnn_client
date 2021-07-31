@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
@@ -11,7 +12,7 @@ import '../network/objects/image.dart' as img;
 
 /// Utility class concerning network related actions.
 class NetworkUtils {
-  static const String _host = 'dev.dawnn.org'; // 10.0.2.2
+  static const String _host = '10.0.2.2'; // dev.dawnn.org
 
   /// Constructs an [img.Image] and posts it to the server.
   ///
@@ -85,22 +86,32 @@ class NetworkUtils {
     } catch (exception) {
       print(exception);
     }
-
-    List<img.Image> images;
-
-    try {
-      images = (json.decode(response.body) as List)
-          .map((i) => img.Image.fromMap(i))
-          .toList();
-    } catch (exception) {
-      // Body was null
-      print('Response was empty.');
-      return null;
-    }
-
     client.close();
 
+    // Not quite elegant, but we'll just step through the response
+    // and parse the images mapped to 'content' keys.
+
+    List list;
+    List<img.Image> results = [];
+
+    try {
+      list = json.decode(response.body);
+      for (LinkedHashMap<String, dynamic> item in list) {
+        for (MapEntry<String, dynamic> content in item.entries) {
+          print(content);
+          if (content.key == 'content') {
+            // Found the images
+            // Parse time
+            results.add(img.Image.fromMap(content.value));
+          }
+        }
+      }
+    } catch (exception) {
+      // Failed parsing - architecture mismatch?
+      print('Failed parsing server response - is this the latest app version?');
+    }
+
     print('Received images.');
-    return images;
+    return results;
   }
 }

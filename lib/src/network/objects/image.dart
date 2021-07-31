@@ -10,14 +10,14 @@ part 'image.g.dart';
 @JsonSerializable(explicitToJson: true)
 class Image {
   /// Create an image with all values specified.
-  Image(this.base64, this.caption, this.authorHWID, this.uuid, this.longitude,
-      this.latitude);
+  Image(this.base64, this.caption, this.authorHWID, this.uuid, this.x,
+      this.y);
 
   /// Create an image without [uuid].
   ///
   /// Used for creating the image client side.
   Image.emptyId(
-      this.base64, this.caption, this.authorHWID, this.longitude, this.latitude);
+      this.base64, this.caption, this.authorHWID, this.x, this.y);
 
   // Match server design to re-use one object
 
@@ -25,8 +25,8 @@ class Image {
   String caption;
   String authorHWID;
   String uuid;
-  double longitude;
-  double latitude;
+  double x;
+  double y;
 
   factory Image.fromMap(Map<String, dynamic> json) => _$ImageFromJson(json);
 
