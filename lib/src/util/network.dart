@@ -98,7 +98,6 @@ class NetworkUtils {
       list = json.decode(response.body);
       for (LinkedHashMap<String, dynamic> item in list) {
         for (MapEntry<String, dynamic> content in item.entries) {
-          print(content);
           if (content.key == 'content') {
             // Found the images
             // Parse time
