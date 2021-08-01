@@ -30,11 +30,12 @@ class _SettingsPageState extends State<SettingsPage> {
           SwitchSettingsTile(
             title: 'Randomize location',
             settingKey: 'random-location',
-            onChange: (bool state) => {
-              if (!kDebugMode)
+            onChange: (bool newState) => {
+              if (!kDebugMode && newState)
                 {
                   ClientUtils.displayResponse(context, -1, '',
-                      'This option is only available in debug mode!')
+                      'This option is only available in debug mode!'),
+                  _setOption('random-location', false)
                 }
             },
           )
@@ -42,6 +43,11 @@ class _SettingsPageState extends State<SettingsPage> {
         ],
       ),
     );
+  }
+
+  /// Set a setting [key] to desired [on] state.
+  void _setOption(String key, bool on) async {
+    await Settings.setValue<bool>(key, on);
   }
 
   /// Brings up the menu related to language selection.
