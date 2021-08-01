@@ -80,5 +80,8 @@ class _ImagePageState extends State<ImagePage> {
     int reply = await NetworkUtils.postImage(context, _imagePath, _caption);
     ClientUtils.displayResponse(context, reply,
         'Success! Image has been posted.', 'Post failed. No internet?');
+    if (reply == 200) {
+      Navigator.pop(context);
+    }
   }
 }

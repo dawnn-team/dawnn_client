@@ -17,8 +17,9 @@ class NetworkUtils {
   /// Constructs an [img.Image] and posts it to the server.
   ///
   /// Using provided image at [imagePath] and user
-  /// submitted [caption], this method constructs an [img.Image] along with a [User],
-  /// which it then posts to the Dawnn server.
+  /// submitted [caption], this method constructs an [img.Image],
+  /// which it then posts to the Dawnn server. Returns -1 on timeout,
+  /// otherwise response code as reported by the server.
   static Future<int> postImage(
       BuildContext context, String imagePath, String caption) async {
     print('Building image and user.');

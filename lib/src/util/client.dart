@@ -87,7 +87,7 @@ class ClientUtils {
   /// either [successText] or [failText].
   /// [failText] is predetermined for status code 400.
   /// To cause a failure disregarding [responseCode],
-  /// [responseCode] should be -1.
+  /// set [responseCode] to -1.
   static void displayResponse(BuildContext context, int responseCode,
       String successText, String failText) {
     String message;
