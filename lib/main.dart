@@ -12,9 +12,13 @@ void main() async {
   final List<CameraDescription> cameras = await availableCameras();
   final CameraDescription firstCamera =
       cameras.isNotEmpty ? cameras.first : null;
+
+  await Firebase.initializeApp();
+
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   if (firstCamera == null) {
-    print('No camera found; unsupported device or simulator.');
+    print('No camera found; unsupported device or iOS simulator.');
   }
   runApp(DawnnClient(camera: firstCamera));
 }
@@ -22,6 +26,8 @@ void main() async {
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
 
+  // Used for testing
+  await FirebaseMessaging.instance.subscribeToTopic('dev');
   print('Handling a background message: ${message.messageId}');
 }
 
@@ -54,7 +60,6 @@ class _DawnnClientState extends State<DawnnClient> {
             // Firebase app has finished initializing, let's start listening
             // to messages.
             NotificationController.controller;
-
             return MaterialApp(
               // TODO Load primarySwatch from config.
               theme: ThemeData(

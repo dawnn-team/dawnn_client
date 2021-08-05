@@ -31,8 +31,10 @@ class _SettingsPageState extends State<SettingsPage> {
             title: 'Randomize location',
             settingKey: 'random-location',
             onChange: (bool newState) => {
-              if (!kDebugMode && newState)
+              // If we're in release mode, and we want to enable this feature
+              if (kReleaseMode && newState)
                 {
+                  // Warn user we can't do that, and disable it.
                   ClientUtils.displayResponse(context, -1, '',
                       'This option is only available in debug mode!'),
                   _setOption('random-location', false)

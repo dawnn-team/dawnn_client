@@ -15,6 +15,10 @@ class NotificationController {
     return _controller;
   }
 
+  /// Create a new [NotificationController] to listen to notifications
+  /// in the foreground.
+  ///
+  /// Must be called after [Firebase.initializeApp], implicitly calls [_listen].
   NotificationController._() {
     _listen();
   }
@@ -22,18 +26,15 @@ class NotificationController {
   /// Begins listening to Firebase messages.
   ///
   /// This message is implicitly called whenever an instance of
-  /// [NotificationController] is created. Awaits [Firebase.initializeApp] before
-  /// listening to notifications.
+  /// [NotificationController] is created.
   void _listen() async {
-    await Firebase.initializeApp();
-
     NotificationSettings settings =
         await FirebaseMessaging.instance.requestPermission(
             alert: true,
             announcement: false,
             badge: true,
             carPlay: false,
-            // ?
+            // Are we critical?
             criticalAlert: false,
             provisional: false,
             sound: true);
