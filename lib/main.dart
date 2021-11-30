@@ -63,6 +63,8 @@ class _DawnnClientState extends State<DawnnClient> {
             return MaterialApp(
               // TODO Load primarySwatch from config.
               theme: ThemeData(
+                  colorScheme:
+                      ColorScheme.fromSwatch(primarySwatch: Colors.red),
                   primaryColor: Colors.red,
                   visualDensity: VisualDensity.adaptivePlatformDensity),
               home: HomePage(this._camera),

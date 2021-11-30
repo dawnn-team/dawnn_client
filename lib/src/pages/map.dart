@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:dawnn_client/src/network/objects/image.dart' as img;
 import 'package:dawnn_client/src/util/client.dart';
 import 'package:dawnn_client/src/util/network.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -139,8 +138,7 @@ class _MapPageState extends State<MapPage> with AutomaticKeepAliveClientMixin {
             onTap: () => viewImage(image),
             consumeTapEvents: true,
             infoWindow: InfoWindow(title: image.caption),
-            position: LatLng(
-                image.y, image.x),
+            position: LatLng(image.y, image.x),
             icon: BitmapDescriptor.defaultMarker)
       });
     }

@@ -53,9 +53,17 @@ class _CameraPageState extends State<CameraPage> {
           future: _initializeControllerFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return Align(
-                  alignment: Alignment.center,
-                  child: CameraPreview(_controller));
+              // Code from
+              // https://stackoverflow.com/questions/56735552/how-to-set-flutter-camerapreview-size-fullscreen
+              var size = MediaQuery.of(context).size;
+              final scale = 1 /
+                  (_controller.value.aspectRatio *
+                      MediaQuery.of(context).size.aspectRatio);
+              return Transform.scale(
+                scale: scale,
+                alignment: Alignment.topCenter,
+                child: CameraPreview(_controller),
+              );
             } else {
               return Center(child: CircularProgressIndicator());
             }
